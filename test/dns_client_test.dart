@@ -19,5 +19,12 @@ void main() {
       expect(address, isNotNull);
       expect(address.isNotEmpty, isTrue);
     });
+
+    test('cname test)', () async {
+      final client = DnsOverHttps.cloudflare();
+      final address = await client.lookup('api.google.com');
+      expect(address, isNotNull);
+      expect(address.isNotEmpty, isTrue);
+    });
   });
 }

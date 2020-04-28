@@ -38,6 +38,7 @@ class DnsOverHttps extends DnsClient {
   Future<List<InternetAddress>> lookup(String hostname) {
     return lookupHttps(hostname).then((record) {
       return record.answer
+              ?.where((answer) => answer.type == 1)
               ?.map((answer) => InternetAddress(answer.data))
               ?.toList() ??
           [];
