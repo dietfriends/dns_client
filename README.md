@@ -1,7 +1,6 @@
-A library for Dart developers.
+Dart implementation of DNS-over-HTTPS.
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+[license](https://github.com/dietfriends/dns_client/blob/master/LICENSE).
 
 ## Usage
 
@@ -10,9 +9,23 @@ A simple usage example:
 ```dart
 import 'package:dns_client/dns_client.dart';
 
-main() {
-  var awesome = new Awesome();
-}
+main() async {
+  final dns = DnsOverHttps.google();
+  var response = await dns.lookup('google.com');
+  response.forEach((address) {
+    print(address.toString());
+  });}
+```
+
+```dart
+import 'package:dns_client/dns_client.dart';
+
+main() async {
+  final dns = DnsOverHttps.cloudflare();
+  var response = await dns.lookup('google.com');
+  response.forEach((address) {
+    print(address.toString());
+  });}
 ```
 
 ## Features and bugs
