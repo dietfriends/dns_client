@@ -7,8 +7,8 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
-  http:
-  freezed_annotation:
+  http: ^0.12.1
+  freezed_annotation: ^0.7.1
   json_annotation: ^3.0.0
 
 dev_dependencies:
