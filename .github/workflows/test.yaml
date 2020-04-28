@@ -1,0 +1,24 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+jobs:
+  prepare:
+    runs-on: ubuntu-18.04
+    if: "! contains(github.event.head_commit.message, '[skip ci]') && ! contains(github.event.head_commit.message, '[skip android]') "
+    steps:
+      - run: echo "${{ github.event.head_commit.message }}"
+  build:
+    runs-on: ubuntu-18.04
+    needs: prepare
+  steps:
+    - uses: actions/checkout@v2
+    - uses: cedx/setup-dart@v1
+    - run: pub get
+    - run: pub run test
