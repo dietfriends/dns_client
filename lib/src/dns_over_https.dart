@@ -16,7 +16,7 @@ class DnsOverHttps extends DnsClient {
   final bool maximalPrivacy;
 
   /// Default timeout for operations.
-  final Duration timeout;
+  final Duration? timeout;
 
   DnsOverHttps(this.url,
       {this.timeout = const Duration(milliseconds: 5000),
@@ -25,11 +25,11 @@ class DnsOverHttps extends DnsClient {
     _client.connectionTimeout = timeout;
   }
 
-  factory DnsOverHttps.google({Duration timeout}) {
+  factory DnsOverHttps.google({Duration? timeout}) {
     return DnsOverHttps('https://dns.google.com/resolve', timeout: timeout);
   }
 
-  factory DnsOverHttps.cloudflare({Duration timeout}) {
+  factory DnsOverHttps.cloudflare({Duration? timeout}) {
     return DnsOverHttps('https://cloudflare-dns.com/dns-query',
         timeout: timeout);
   }
@@ -39,8 +39,8 @@ class DnsOverHttps extends DnsClient {
     return lookupHttps(hostname).then((record) {
       return record.answer
               ?.where((answer) => answer.type == 1)
-              ?.map((answer) => InternetAddress(answer.data))
-              ?.toList() ??
+              .map((answer) => InternetAddress(answer.data))
+              .toList() ??
           [];
     });
   }
@@ -50,10 +50,7 @@ class DnsOverHttps extends DnsClient {
     // Build URL
     var query = {'name': hostname};
     // Add: IPv4 or IPv6?
-    if (type == null) {
-      throw ArgumentError.notNull("type");
-    } else if (type == InternetAddressType.any ||
-        type == InternetAddressType.IPv4) {
+    if (type == InternetAddressType.any || type == InternetAddressType.IPv4) {
       query['type'] = 'A';
     } else {
       query['type'] = 'AAAA';
