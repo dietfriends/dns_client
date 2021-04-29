@@ -1,19 +1,19 @@
 name: dns_client
 description: Dart implementation of DNS-over-HTTPS.
-version: 0.1.0+2
+version: 0.2.0
 homepage: https://github.com/dietfriends/dns_client
 
 environment:
-  sdk: '>=2.7.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  http: ^0.12.1
+  http: ^0.13.1
   freezed_annotation:
-  json_annotation: ^3.0.0
+  json_annotation: ^4.0.1
 
 dev_dependencies:
-  pedantic: ^1.9.0
+  pedantic: ^1.11.0
   test: ^1.6.0
-  json_serializable: ^3.2.0
+  json_serializable: ^4.1.0
   build_runner: ^1.0.0
   freezed:

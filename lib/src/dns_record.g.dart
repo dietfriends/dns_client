@@ -14,12 +14,11 @@ _$_DnsRecord _$_$_DnsRecordFromJson(Map<String, dynamic> json) {
     json['RA'] as bool,
     json['AD'] as bool,
     json['CD'] as bool,
-    json['edns_client_subnet'] as String,
-    (json['Answer'] as List)
-        ?.map((e) =>
-            e == null ? null : Answer.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    json['Comment'] as String,
+    json['edns_client_subnet'] as String?,
+    (json['Answer'] as List<dynamic>?)
+        ?.map((e) => Answer.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    json['Comment'] as String?,
   );
 }
 

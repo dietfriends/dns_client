@@ -14,9 +14,9 @@ abstract class DnsRecord implements _$DnsRecord {
       bool RA,
       bool AD,
       bool CD,
-      @JsonKey(name: 'edns_client_subnet') @nullable String ednsClientSubnet,
-      @JsonKey(name: 'Answer') @nullable List<Answer> answer,
-      @JsonKey(name: 'Comment') @nullable String comment) = _DnsRecord;
+      @JsonKey(name: 'edns_client_subnet') String? ednsClientSubnet,
+      @JsonKey(name: 'Answer') List<Answer>? answer,
+      @JsonKey(name: 'Comment') String? comment) = _DnsRecord;
 
   factory DnsRecord.fromJson(Map<String, dynamic> json) =>
       _$DnsRecordFromJson(json);
@@ -29,7 +29,7 @@ abstract class DnsRecord implements _$DnsRecord {
 }
 
 @freezed
-abstract class Question with _$Question {
+class Question with _$Question {
   const factory Question(String name, int type) = _Question;
 
   factory Question.fromJson(Map<String, dynamic> json) =>
@@ -37,7 +37,7 @@ abstract class Question with _$Question {
 }
 
 @freezed
-abstract class Answer with _$Answer {
+class Answer with _$Answer {
   const factory Answer(String name, int type, int TTL, String data) = _Answer;
 
   factory Answer.fromJson(Map<String, dynamic> json) => _$AnswerFromJson(json);
