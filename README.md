@@ -1,6 +1,8 @@
 Dart implementation of DNS-over-HTTPS.
 
-[license](https://github.com/dietfriends/dns_client/blob/master/LICENSE).
+[![CodeFactor](https://www.codefactor.io/repository/github/dietfriends/dns_client/badge)](https://www.codefactor.io/repository/github/dietfriends/dns_client)
+[![pub.dev](https://badgen.net/pub/v/dns_client)](https://pub.dev/packages/dns_client)
+[![license](https://badgen.net/pub/license/dns_client)](https://github.com/dietfriends/dns_client/blob/master/LICENSE)
 
 ## Usage
 
