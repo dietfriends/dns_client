@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   http: ^0.13.1
-  freezed_annotation:
+  freezed_annotation: ^0.14.0
   json_annotation: ^4.0.1
 
 dev_dependencies:
@@ -16,4 +16,4 @@ dev_dependencies:
   test: ^1.6.0
   json_serializable: ^4.1.0
   build_runner: ^1.0.0
-  freezed:
+  freezed: ^0.14.0
