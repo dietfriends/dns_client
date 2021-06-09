@@ -25,6 +25,18 @@ class DnsOverHttps extends DnsClient {
     _client.connectionTimeout = timeout;
   }
 
+  /// Shuts down the HTTP client.
+  ///
+  /// If [force] is `false` (the default) the [HttpClient] will be kept alive
+  /// until all active connections are done. If [force] is `true` any active
+  /// connections will be closed to immediately release all resources. These
+  /// closed connections will receive an error event to indicate that the client
+  /// was shut down. In both cases trying to establish a new connection after
+  /// calling [close] will throw an exception.
+  void close({bool force = false}) {
+    _client.close(force: force);
+  }
+
   factory DnsOverHttps.google({Duration? timeout}) {
     return DnsOverHttps('https://dns.google.com/resolve', timeout: timeout);
   }
@@ -60,9 +72,15 @@ class DnsOverHttps extends DnsClient {
     if (maximalPrivacy) {
       query['edns_client_subnet'] = '0.0.0.0/0';
     }
-    final response = await http.get(Uri.https(_uri.authority, _uri.path, query),
-        headers: {'accept': 'application/dns-json'});
-    final record = DnsRecord.fromJson(jsonDecode(response.body));
+    final request =
+        await _client.getUrl(Uri.https(_uri.authority, _uri.path, query));
+    request.headers.set('accept', 'application/dns-json');
+    final response = await request.close();
+    final contents = StringBuffer();
+    await for (var data in response.transform(utf8.decoder)) {
+      contents.write(data);
+    }
+    final record = DnsRecord.fromJson(jsonDecode(contents.toString()));
     return record;
   }
 }
