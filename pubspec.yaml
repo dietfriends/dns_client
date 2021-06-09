@@ -1,6 +1,6 @@
 name: dns_client
 description: Dart implementation of DNS-over-HTTPS.
-version: 0.2.0
+version: 0.2.1
 homepage: https://github.com/dietfriends/dns_client
 
 environment:

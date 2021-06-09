@@ -1,3 +1,7 @@
+## 0.2.1
+
+- use `HttpClient` instead of `http` 
+
 ## 0.2.0
 
 - Migrated to null-safety
