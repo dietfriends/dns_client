@@ -1,5 +1,6 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'dns_record.dart';
 
@@ -43,7 +44,7 @@ class _$DnsRecordTearOff {
     );
   }
 
-  DnsRecord fromJson(Map<String, Object> json) {
+  DnsRecord fromJson(Map<String, Object?> json) {
     return DnsRecord.fromJson(json);
   }
 }
@@ -230,9 +231,8 @@ class __$DnsRecordCopyWithImpl<$Res> extends _$DnsRecordCopyWithImpl<$Res>
   }
 }
 
-@JsonSerializable()
-
 /// @nodoc
+@JsonSerializable()
 class _$_DnsRecord extends _DnsRecord {
   const _$_DnsRecord(
       @JsonKey(name: 'Status') this.status,
@@ -247,7 +247,7 @@ class _$_DnsRecord extends _DnsRecord {
       : super._();
 
   factory _$_DnsRecord.fromJson(Map<String, dynamic> json) =>
-      _$_$_DnsRecordFromJson(json);
+      _$$_DnsRecordFromJson(json);
 
   @override
   @JsonKey(name: 'Status')
@@ -280,40 +280,23 @@ class _$_DnsRecord extends _DnsRecord {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _DnsRecord &&
-            (identical(other.status, status) ||
-                const DeepCollectionEquality().equals(other.status, status)) &&
-            (identical(other.TC, TC) ||
-                const DeepCollectionEquality().equals(other.TC, TC)) &&
-            (identical(other.RD, RD) ||
-                const DeepCollectionEquality().equals(other.RD, RD)) &&
-            (identical(other.RA, RA) ||
-                const DeepCollectionEquality().equals(other.RA, RA)) &&
-            (identical(other.AD, AD) ||
-                const DeepCollectionEquality().equals(other.AD, AD)) &&
-            (identical(other.CD, CD) ||
-                const DeepCollectionEquality().equals(other.CD, CD)) &&
+        (other.runtimeType == runtimeType &&
+            other is _DnsRecord &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.TC, TC) || other.TC == TC) &&
+            (identical(other.RD, RD) || other.RD == RD) &&
+            (identical(other.RA, RA) || other.RA == RA) &&
+            (identical(other.AD, AD) || other.AD == AD) &&
+            (identical(other.CD, CD) || other.CD == CD) &&
             (identical(other.ednsClientSubnet, ednsClientSubnet) ||
-                const DeepCollectionEquality()
-                    .equals(other.ednsClientSubnet, ednsClientSubnet)) &&
-            (identical(other.answer, answer) ||
-                const DeepCollectionEquality().equals(other.answer, answer)) &&
-            (identical(other.comment, comment) ||
-                const DeepCollectionEquality().equals(other.comment, comment)));
+                other.ednsClientSubnet == ednsClientSubnet) &&
+            const DeepCollectionEquality().equals(other.answer, answer) &&
+            (identical(other.comment, comment) || other.comment == comment));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(status) ^
-      const DeepCollectionEquality().hash(TC) ^
-      const DeepCollectionEquality().hash(RD) ^
-      const DeepCollectionEquality().hash(RA) ^
-      const DeepCollectionEquality().hash(AD) ^
-      const DeepCollectionEquality().hash(CD) ^
-      const DeepCollectionEquality().hash(ednsClientSubnet) ^
-      const DeepCollectionEquality().hash(answer) ^
-      const DeepCollectionEquality().hash(comment);
+  int get hashCode => Object.hash(runtimeType, status, TC, RD, RA, AD, CD,
+      ednsClientSubnet, const DeepCollectionEquality().hash(answer), comment);
 
   @JsonKey(ignore: true)
   @override
@@ -322,7 +305,7 @@ class _$_DnsRecord extends _DnsRecord {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_DnsRecordToJson(this);
+    return _$$_DnsRecordToJson(this);
   }
 }
 
@@ -344,26 +327,26 @@ abstract class _DnsRecord extends DnsRecord {
 
   @override
   @JsonKey(name: 'Status')
-  int get status => throw _privateConstructorUsedError;
+  int get status;
   @override
-  bool get TC => throw _privateConstructorUsedError;
+  bool get TC;
   @override
-  bool get RD => throw _privateConstructorUsedError;
+  bool get RD;
   @override
-  bool get RA => throw _privateConstructorUsedError;
+  bool get RA;
   @override
-  bool get AD => throw _privateConstructorUsedError;
+  bool get AD;
   @override
-  bool get CD => throw _privateConstructorUsedError;
+  bool get CD;
   @override
   @JsonKey(name: 'edns_client_subnet')
-  String? get ednsClientSubnet => throw _privateConstructorUsedError;
+  String? get ednsClientSubnet;
   @override
   @JsonKey(name: 'Answer')
-  List<Answer>? get answer => throw _privateConstructorUsedError;
+  List<Answer>? get answer;
   @override
   @JsonKey(name: 'Comment')
-  String? get comment => throw _privateConstructorUsedError;
+  String? get comment;
   @override
   @JsonKey(ignore: true)
   _$DnsRecordCopyWith<_DnsRecord> get copyWith =>
@@ -385,7 +368,7 @@ class _$QuestionTearOff {
     );
   }
 
-  Question fromJson(Map<String, Object> json) {
+  Question fromJson(Map<String, Object?> json) {
     return Question.fromJson(json);
   }
 }
@@ -472,14 +455,13 @@ class __$QuestionCopyWithImpl<$Res> extends _$QuestionCopyWithImpl<$Res>
   }
 }
 
-@JsonSerializable()
-
 /// @nodoc
+@JsonSerializable()
 class _$_Question implements _Question {
   const _$_Question(this.name, this.type);
 
   factory _$_Question.fromJson(Map<String, dynamic> json) =>
-      _$_$_QuestionFromJson(json);
+      _$$_QuestionFromJson(json);
 
   @override
   final String name;
@@ -494,18 +476,14 @@ class _$_Question implements _Question {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _Question &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)) &&
-            (identical(other.type, type) ||
-                const DeepCollectionEquality().equals(other.type, type)));
+        (other.runtimeType == runtimeType &&
+            other is _Question &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.type, type) || other.type == type));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(type);
+  int get hashCode => Object.hash(runtimeType, name, type);
 
   @JsonKey(ignore: true)
   @override
@@ -514,7 +492,7 @@ class _$_Question implements _Question {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_QuestionToJson(this);
+    return _$$_QuestionToJson(this);
   }
 }
 
@@ -524,9 +502,9 @@ abstract class _Question implements Question {
   factory _Question.fromJson(Map<String, dynamic> json) = _$_Question.fromJson;
 
   @override
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
-  int get type => throw _privateConstructorUsedError;
+  int get type;
   @override
   @JsonKey(ignore: true)
   _$QuestionCopyWith<_Question> get copyWith =>
@@ -550,7 +528,7 @@ class _$AnswerTearOff {
     );
   }
 
-  Answer fromJson(Map<String, Object> json) {
+  Answer fromJson(Map<String, Object?> json) {
     return Answer.fromJson(json);
   }
 }
@@ -658,14 +636,13 @@ class __$AnswerCopyWithImpl<$Res> extends _$AnswerCopyWithImpl<$Res>
   }
 }
 
-@JsonSerializable()
-
 /// @nodoc
+@JsonSerializable()
 class _$_Answer implements _Answer {
   const _$_Answer(this.name, this.type, this.TTL, this.data);
 
   factory _$_Answer.fromJson(Map<String, dynamic> json) =>
-      _$_$_AnswerFromJson(json);
+      _$$_AnswerFromJson(json);
 
   @override
   final String name;
@@ -684,24 +661,16 @@ class _$_Answer implements _Answer {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _Answer &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)) &&
-            (identical(other.type, type) ||
-                const DeepCollectionEquality().equals(other.type, type)) &&
-            (identical(other.TTL, TTL) ||
-                const DeepCollectionEquality().equals(other.TTL, TTL)) &&
-            (identical(other.data, data) ||
-                const DeepCollectionEquality().equals(other.data, data)));
+        (other.runtimeType == runtimeType &&
+            other is _Answer &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.TTL, TTL) || other.TTL == TTL) &&
+            (identical(other.data, data) || other.data == data));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(type) ^
-      const DeepCollectionEquality().hash(TTL) ^
-      const DeepCollectionEquality().hash(data);
+  int get hashCode => Object.hash(runtimeType, name, type, TTL, data);
 
   @JsonKey(ignore: true)
   @override
@@ -710,7 +679,7 @@ class _$_Answer implements _Answer {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_AnswerToJson(this);
+    return _$$_AnswerToJson(this);
   }
 }
 
@@ -721,13 +690,13 @@ abstract class _Answer implements Answer {
   factory _Answer.fromJson(Map<String, dynamic> json) = _$_Answer.fromJson;
 
   @override
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
-  int get type => throw _privateConstructorUsedError;
+  int get type;
   @override
-  int get TTL => throw _privateConstructorUsedError;
+  int get TTL;
   @override
-  String get data => throw _privateConstructorUsedError;
+  String get data;
   @override
   @JsonKey(ignore: true)
   _$AnswerCopyWith<_Answer> get copyWith => throw _privateConstructorUsedError;

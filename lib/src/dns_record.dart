@@ -5,7 +5,7 @@ part 'dns_record.g.dart';
 part 'dns_record.freezed.dart';
 
 @freezed
-abstract class DnsRecord implements _$DnsRecord {
+class DnsRecord with _$DnsRecord {
   const DnsRecord._(); // Added constructor
   const factory DnsRecord(
       @JsonKey(name: 'Status') int status,
@@ -18,8 +18,7 @@ abstract class DnsRecord implements _$DnsRecord {
       @JsonKey(name: 'Answer') List<Answer>? answer,
       @JsonKey(name: 'Comment') String? comment) = _DnsRecord;
 
-  factory DnsRecord.fromJson(Map<String, dynamic> json) =>
-      _$DnsRecordFromJson(json);
+  factory DnsRecord.fromJson(Map<String, dynamic> json) => _$DnsRecordFromJson(json);
 
   // SERVFAIL - Standard DNS response code (32 bit integer).
   bool get isFailure => status == 2;
@@ -32,8 +31,7 @@ abstract class DnsRecord implements _$DnsRecord {
 class Question with _$Question {
   const factory Question(String name, int type) = _Question;
 
-  factory Question.fromJson(Map<String, dynamic> json) =>
-      _$QuestionFromJson(json);
+  factory Question.fromJson(Map<String, dynamic> json) => _$QuestionFromJson(json);
 }
 
 @freezed

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dns_client/dns_client.dart';
-import 'package:http/http.dart' as http;
 
 import 'dns_record.dart';
 
