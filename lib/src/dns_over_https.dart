@@ -34,10 +34,12 @@ class DnsOverHttps extends DnsClient {
     _client.close(force: force);
   }
 
+  /// [Google DNS-over-HTTPS documentation](https://developers.google.com/speed/public-dns/docs/dns-over-https)
   factory DnsOverHttps.google({Duration? timeout}) {
     return DnsOverHttps('https://dns.google.com/resolve', timeout: timeout);
   }
 
+  /// [Cloudflare DNS-over-HTTPS documentation](https://developers.cloudflare.com/1.1.1.1/dns-over-https/json-format/)
   factory DnsOverHttps.cloudflare({Duration? timeout}) {
     return DnsOverHttps('https://cloudflare-dns.com/dns-query',
         timeout: timeout);
