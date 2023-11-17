@@ -18,7 +18,8 @@ class DnsRecord with _$DnsRecord {
       @JsonKey(name: 'Answer') List<Answer>? answer,
       @JsonKey(name: 'Comment') String? comment) = _DnsRecord;
 
-  factory DnsRecord.fromJson(Map<String, dynamic> json) => _$DnsRecordFromJson(json);
+  factory DnsRecord.fromJson(Map<String, dynamic> json) =>
+      _$DnsRecordFromJson(json);
 
   // SERVFAIL - Standard DNS response code (32 bit integer).
   bool get isFailure => status == 2;
@@ -31,7 +32,8 @@ class DnsRecord with _$DnsRecord {
 class Question with _$Question {
   const factory Question(String name, int type) = _Question;
 
-  factory Question.fromJson(Map<String, dynamic> json) => _$QuestionFromJson(json);
+  factory Question.fromJson(Map<String, dynamic> json) =>
+      _$QuestionFromJson(json);
 }
 
 @freezed

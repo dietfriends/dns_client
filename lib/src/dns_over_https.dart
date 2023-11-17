@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dns_client/dns_client.dart';
+import 'package:dns_client/src/rr_type.dart';
 
 class DnsOverHttps extends DnsClient {
   final _client = HttpClient();
@@ -36,7 +37,7 @@ class DnsOverHttps extends DnsClient {
 
   /// [Google DNS-over-HTTPS documentation](https://developers.google.com/speed/public-dns/docs/dns-over-https)
   factory DnsOverHttps.google({Duration? timeout}) {
-    return DnsOverHttps('https://dns.google.com/resolve', timeout: timeout);
+    return DnsOverHttps('https://dns.google/resolve', timeout: timeout);
   }
 
   /// [Cloudflare DNS-over-HTTPS documentation](https://developers.cloudflare.com/1.1.1.1/dns-over-https/json-format/)
@@ -81,5 +82,39 @@ class DnsOverHttps extends DnsClient {
     }
     final record = DnsRecord.fromJson(jsonDecode(contents.toString()));
     return record;
+  }
+
+  Future<DnsRecord> lookupHttpsByRRType(String hostname, RRType rrType) async {
+    // Build URL
+    var query = {
+      'name': hostname,
+      'type': '${rrType.value}',
+    };
+
+    // Hide my IP?
+    if (maximalPrivacy) {
+      query['edns_client_subnet'] = '0.0.0.0/0';
+    }
+    final request =
+        await _client.getUrl(Uri.https(_uri.authority, _uri.path, query));
+    request.headers.set('accept', 'application/dns-json');
+    final response = await request.close();
+    final contents = StringBuffer();
+    await for (var data in response.transform(utf8.decoder)) {
+      contents.write(data);
+    }
+    final record = DnsRecord.fromJson(jsonDecode(contents.toString()));
+    return record;
+  }
+
+  @override
+  Future<List<String>> lookupDataByRRType(String hostname, RRType rrType) {
+    return lookupHttpsByRRType(hostname, rrType).then((record) {
+      return record.answer
+              ?.where((answer) => answer.type == rrType.value)
+              .map((answer) => answer.data)
+              .toList() ??
+          [];
+    });
   }
 }
