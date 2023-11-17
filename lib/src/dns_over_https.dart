@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dns_client/dns_client.dart';
 
-import 'dns_record.dart';
-
 class DnsOverHttps extends DnsClient {
   final _client = HttpClient();
 
