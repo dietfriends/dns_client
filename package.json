@@ -1,0 +1,25 @@
+{
+  "name": "dns_client",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "format": "dprint fmt",
+    "format:check": "dprint check"
+  },
+  "devDependencies": {
+    "dprint": "^0.51.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "markdownlint-cli2": "^0.20.0"
+  },
+  "lint-staged": {
+    "*.dart": [
+      "dart format --fix",
+      "dart analyze --fatal-infos"
+    ],
+    "*.{md,markdown}": [
+      "dprint fmt",
+      "markdownlint-cli2 --fix"
+    ]
+  }
+}
