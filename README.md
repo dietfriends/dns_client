@@ -10,7 +10,7 @@ Dart implementation of DNS-over-HTTPS (DoH).
 
 ## Features
 
-- **Multiple DNS Providers** - Google DNS, Cloudflare DNS, or custom DoH endpoints
+- **Multiple DNS Providers** - Google DNS, Cloudflare DNS, AdGuard DNS, or custom DoH endpoints
 - **36 DNS Record Types** - A, AAAA, MX, TXT, SRV, CAA, HTTPS, SVCB, DNSKEY, DS, and more
 - **Privacy Protection** - Hide client IP from authoritative nameservers
 - **Error Handling** - Detailed exceptions for DNS and HTTP failures
@@ -60,6 +60,16 @@ dns.close();
 
 // Using Cloudflare DNS
 final dns = DnsOverHttps.cloudflare();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Using AdGuard DNS (blocks ads and trackers)
+final dns = DnsOverHttps.adguard();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Using AdGuard DNS (family protection)
+final dns = DnsOverHttps.adguardFamily();
 final addresses = await dns.lookup('example.com');
 dns.close();
 ```
@@ -189,11 +199,14 @@ dns.close();
 
 **Constructors:**
 
-| Constructor                                    | Description              |
-| ---------------------------------------------- | ------------------------ |
-| `DnsOverHttps(url, {timeout, maximalPrivacy})` | Custom DoH endpoint      |
-| `DnsOverHttps.google({timeout})`               | Google DNS (dns.google)  |
-| `DnsOverHttps.cloudflare({timeout})`           | Cloudflare DNS (1.1.1.1) |
+| Constructor                                    | Description                       |
+| ---------------------------------------------- | --------------------------------- |
+| `DnsOverHttps(url, {timeout, maximalPrivacy})` | Custom DoH endpoint               |
+| `DnsOverHttps.google({timeout})`               | Google DNS (dns.google)           |
+| `DnsOverHttps.cloudflare({timeout})`           | Cloudflare DNS (1.1.1.1)          |
+| `DnsOverHttps.adguard({timeout})`              | AdGuard DNS (blocks ads/trackers) |
+| `DnsOverHttps.adguardNonFiltering({timeout})`  | AdGuard DNS (no filtering)        |
+| `DnsOverHttps.adguardFamily({timeout})`        | AdGuard DNS (family protection)   |
 
 **Methods:**
 
