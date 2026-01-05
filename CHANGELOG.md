@@ -6,6 +6,20 @@
 - Replace deprecated pedantic with lints package
 - Update all dependencies for Dart 3 compatibility
 
+## [1.0.0](https://github.com/amondnet/dns_client/compare/v0.2.1...v1.0.0) (2026-01-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* RRType static constants renamed (e.g., MXType -> MX)
+* Minimum SDK version is now Dart 3.0.0
+
+### Features
+
+* add 26 new DNS record types and simplify API naming ([#12](https://github.com/amondnet/dns_client/issues/12)) ([15b883a](https://github.com/amondnet/dns_client/commit/15b883a429a41da8094108125f733f7e75c182e4))
+* migrate to Dart 3 SDK ([#11](https://github.com/amondnet/dns_client/issues/11)) ([9ec43dc](https://github.com/amondnet/dns_client/commit/9ec43dc9abb11d259ee9d85f051cced0fdc44fa2))
+* use httpclient instead of http ([#6](https://github.com/amondnet/dns_client/issues/6)) ([120506d](https://github.com/amondnet/dns_client/commit/120506d7eb39c53e718aeef9cac11374898d0eb6))
+
 ## 0.2.1
 
 - use `HttpClient` instead of `http`
