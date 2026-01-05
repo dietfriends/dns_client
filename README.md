@@ -68,6 +68,11 @@ final dns = DnsOverHttps.adguard();
 final addresses = await dns.lookup('example.com');
 dns.close();
 
+// Using AdGuard DNS (no filtering)
+final dns = DnsOverHttps.adguardNonFiltering();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
 // Using AdGuard DNS (family protection)
 final dns = DnsOverHttps.adguardFamily();
 final addresses = await dns.lookup('example.com');

@@ -59,6 +59,14 @@ void main() {
       client.close();
     });
 
+    test('cname test', () async {
+      final client = DnsOverHttps.adguard();
+      final address = await client.lookup('api.google.com');
+      expect(address, isNotNull);
+      expect(address.isNotEmpty, isTrue);
+      client.close();
+    });
+
     test('close', () async {
       final client = DnsOverHttps.adguard();
       client.close();
