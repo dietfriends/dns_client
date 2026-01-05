@@ -11,7 +11,7 @@ Dart implementation of DNS-over-HTTPS (DoH).
 ## Features
 
 - **Multiple DNS Providers** - Google DNS, Cloudflare DNS, or custom DoH endpoints
-- **35 DNS Record Types** - A, AAAA, MX, TXT, SRV, CAA, HTTPS, SVCB, DNSKEY, and more
+- **36 DNS Record Types** - A, AAAA, MX, TXT, SRV, CAA, HTTPS, SVCB, DNSKEY, DS, and more
 - **Privacy Protection** - Hide client IP from authoritative nameservers
 - **Error Handling** - Detailed exceptions for DNS and HTTP failures
 - **Dart 3 Support** - Requires Dart SDK 3.7.0+
@@ -226,10 +226,12 @@ dns.close();
 | KX | `RRType.KX` | 36 | Key exchanger |
 | CERT | `RRType.CERT` | 37 | Certificate |
 | APL | `RRType.APL` | 42 | Address prefix list |
+| DS | `RRType.DS` | 43 | Delegation signer (DNSSEC) |
 | IPSECKEY | `RRType.IPSECKEY` | 45 | IPsec key |
 | NSEC | `RRType.NSEC` | 47 | Next secure (DNSSEC) |
 | DNSKEY | `RRType.DNSKEY` | 48 | DNS key (DNSSEC) |
 | DHCID | `RRType.DHCID` | 49 | DHCP identifier |
+| NSEC3 | `RRType.NSEC3` | 50 | Hashed denial (DNSSEC) |
 | NSEC3PARAM | `RRType.NSEC3PARAM` | 51 | NSEC3 parameters |
 | SMIMEA | `RRType.SMIMEA` | 53 | S/MIME certificate |
 | HIP | `RRType.HIP` | 55 | Host identity protocol |

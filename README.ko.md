@@ -11,7 +11,7 @@ Dart로 구현한 DNS-over-HTTPS (DoH) 라이브러리입니다.
 ## 주요 기능
 
 - **다양한 DNS 제공자** - Google DNS, Cloudflare DNS 또는 사용자 정의 DoH 엔드포인트 지원
-- **35개 DNS 레코드 타입** - A, AAAA, MX, TXT, SRV, CAA, HTTPS, SVCB, DNSKEY 등
+- **36개 DNS 레코드 타입** - A, AAAA, MX, TXT, SRV, CAA, HTTPS, SVCB, DNSKEY, DS 등
 - **개인정보 보호** - 권한 있는 네임서버로부터 클라이언트 IP 숨김
 - **에러 처리** - DNS 및 HTTP 오류에 대한 상세한 예외 처리
 - **Dart 3 지원** - Dart SDK 3.7.0 이상 필요
@@ -226,10 +226,12 @@ dns.close();
 | KX | `RRType.KX` | 36 | 키 교환기 |
 | CERT | `RRType.CERT` | 37 | 인증서 |
 | APL | `RRType.APL` | 42 | 주소 접두사 목록 |
+| DS | `RRType.DS` | 43 | 위임 서명자 (DNSSEC) |
 | IPSECKEY | `RRType.IPSECKEY` | 45 | IPsec 키 |
 | NSEC | `RRType.NSEC` | 47 | 다음 보안 (DNSSEC) |
 | DNSKEY | `RRType.DNSKEY` | 48 | DNS 키 (DNSSEC) |
 | DHCID | `RRType.DHCID` | 49 | DHCP 식별자 |
+| NSEC3 | `RRType.NSEC3` | 50 | 해시 기반 부재 증명 (DNSSEC) |
 | NSEC3PARAM | `RRType.NSEC3PARAM` | 51 | NSEC3 매개변수 |
 | SMIMEA | `RRType.SMIMEA` | 53 | S/MIME 인증서 |
 | HIP | `RRType.HIP` | 55 | 호스트 ID 프로토콜 |

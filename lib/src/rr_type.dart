@@ -24,7 +24,7 @@ import 'package:equatable/equatable.dart';
 /// - [IANA DNS Parameters](https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml)
 /// - RFC 1035 for standard DNS record types
 class RRType with EquatableMixin {
-  // Standard record types (RFC 1035)
+  // Predefined record types
 
   /// A record: Maps a hostname to an IPv4 address.
   static final RRType A = RRType._('A', 1);
@@ -80,6 +80,9 @@ class RRType with EquatableMixin {
   /// APL record: Address prefix list for network ranges.
   static final RRType APL = RRType._('APL', 42);
 
+  /// DS record: Delegation signer for DNSSEC chain of trust.
+  static final RRType DS = RRType._('DS', 43);
+
   /// IPSECKEY record: IPsec public key for IKE.
   static final RRType IPSECKEY = RRType._('IPSECKEY', 45);
 
@@ -91,6 +94,9 @@ class RRType with EquatableMixin {
 
   /// DHCID record: DHCP client identifier for DNS updates.
   static final RRType DHCID = RRType._('DHCID', 49);
+
+  /// NSEC3 record: Hashed denial of existence for DNSSEC.
+  static final RRType NSEC3 = RRType._('NSEC3', 50);
 
   /// NSEC3PARAM record: NSEC3 parameters for DNSSEC.
   static final RRType NSEC3PARAM = RRType._('NSEC3PARAM', 51);
@@ -177,10 +183,12 @@ class RRType with EquatableMixin {
     36: KX,
     37: CERT,
     42: APL,
+    43: DS,
     45: IPSECKEY,
     47: NSEC,
     48: DNSKEY,
     49: DHCID,
+    50: NSEC3,
     51: NSEC3PARAM,
     53: SMIMEA,
     55: HIP,
