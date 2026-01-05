@@ -56,7 +56,7 @@ class RRType with EquatableMixin {
   /// AFSDB record: AFS database server location.
   static final RRType AFSDB = RRType._('AFSDB', 18);
 
-  /// KEY record: Public key for DNSSEC (obsoleted by DNSKEY).
+  /// KEY record: Legacy public key (RFC 2535, obsoleted by DNSKEY in RFC 4034).
   static final RRType KEY = RRType._('KEY', 25);
 
   /// AAAA record: Maps a hostname to an IPv6 address.
@@ -68,10 +68,10 @@ class RRType with EquatableMixin {
   /// SRV record: Service location for specific services.
   static final RRType SRV = RRType._('SRV', 33);
 
-  /// NAPTR record: Naming authority pointer for ENUM/URI.
+  /// NAPTR record: Naming authority pointer for regex-based rewriting (ENUM, SIP).
   static final RRType NAPTR = RRType._('NAPTR', 35);
 
-  /// KX record: Key exchanger for cryptographic keys.
+  /// KX record: Key management agent host (similar to MX for mail).
   static final RRType KX = RRType._('KX', 36);
 
   /// CERT record: Certificate storage (X.509, PGP, etc.).
@@ -131,7 +131,7 @@ class RRType with EquatableMixin {
   /// TA record: DNSSEC trust anchor.
   static final RRType TA = RRType._('TA', 32768);
 
-  /// DLV record: DNSSEC lookaside validation (deprecated).
+  /// DLV record: DNSSEC lookaside validation (deprecated since 2017, no longer operational).
   static final RRType DLV = RRType._('DLV', 32769);
 
   // Legacy aliases (deprecated, use new names without 'Type' suffix)
