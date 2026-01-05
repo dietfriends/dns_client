@@ -11,7 +11,7 @@ Dart로 구현한 DNS-over-HTTPS (DoH) 라이브러리입니다.
 ## 주요 기능
 
 - **다양한 DNS 제공자** - Google DNS, Cloudflare DNS 또는 사용자 정의 DoH 엔드포인트 지원
-- **모든 DNS 레코드 타입** - A, AAAA, MX, TXT, SRV, NS, CNAME, PTR, SOA 및 커스텀 타입
+- **35개 DNS 레코드 타입** - A, AAAA, MX, TXT, SRV, CAA, HTTPS, SVCB, DNSKEY 등
 - **개인정보 보호** - 권한 있는 네임서버로부터 클라이언트 IP 숨김
 - **에러 처리** - DNS 및 HTTP 오류에 대한 상세한 예외 처리
 - **Dart 3 지원** - Dart SDK 3.7.0 이상 필요
@@ -70,23 +70,27 @@ dns.close();
 final dns = DnsOverHttps.google();
 
 // MX 레코드 (메일 서버)
-final mxRecords = await dns.lookupDataByRRType('example.com', RRType.MXType);
+final mxRecords = await dns.lookupDataByRRType('example.com', RRType.MX);
 print('메일 서버: $mxRecords');
 
 // TXT 레코드 (SPF, DKIM, 도메인 인증)
-final txtRecords = await dns.lookupDataByRRType('example.com', RRType.TXTType);
+final txtRecords = await dns.lookupDataByRRType('example.com', RRType.TXT);
 print('TXT 레코드: $txtRecords');
 
 // SRV 레코드 (서비스 검색)
 final srvRecords = await dns.lookupDataByRRType(
   '_jmap._tcp.fastmail.com',
-  RRType.SRVType,
+  RRType.SRV,
 );
 print('SRV 레코드: $srvRecords');
 
-// AAAA 레코드 (IPv6)
-final ipv6Records = await dns.lookupDataByRRType('example.com', RRType.AAAAType);
-print('IPv6 주소: $ipv6Records');
+// CAA 레코드 (인증 기관 권한)
+final caaRecords = await dns.lookupDataByRRType('example.com', RRType.CAA);
+print('CAA 레코드: $caaRecords');
+
+// HTTPS 레코드 (서비스 바인딩)
+final httpsRecords = await dns.lookupDataByRRType('example.com', RRType.HTTPS);
+print('HTTPS 레코드: $httpsRecords');
 
 dns.close();
 ```
@@ -136,7 +140,7 @@ final dns = DnsOverHttps.google();
 try {
   final records = await dns.lookupDataByRRType(
     'nonexistent.invalid',
-    RRType.AType,
+    RRType.A,
   );
 } on DnsLookupException catch (e) {
   // DNS 수준 오류 (NXDOMAIN, SERVFAIL 등)
@@ -159,7 +163,7 @@ try {
 ```dart
 final dns = DnsOverHttps.google();
 
-final record = await dns.lookupHttpsByRRType('example.com', RRType.MXType);
+final record = await dns.lookupHttpsByRRType('example.com', RRType.MX);
 
 if (record.isSuccess) {
   print('상태: ${record.status}');  // 0 = NOERROR
@@ -204,22 +208,47 @@ dns.close();
 
 | 타입 | 상수 | 값 | 설명 |
 |------|------|-----|------|
-| A | `RRType.AType` | 1 | IPv4 주소 |
-| NS | `RRType.NSType` | 2 | 네임 서버 |
-| CNAME | `RRType.CNAMEType` | 5 | 정식 이름 (별칭) |
-| SOA | `RRType.SOAType` | 6 | 권한 시작 |
-| PTR | `RRType.PTRType` | 12 | 역방향 DNS 포인터 |
-| MX | `RRType.MXType` | 15 | 메일 교환기 |
-| TXT | `RRType.TXTType` | 16 | 텍스트 레코드 |
-| AAAA | `RRType.AAAAType` | 28 | IPv6 주소 |
-| SRV | `RRType.SRVType` | 33 | 서비스 위치 |
+| A | `RRType.A` | 1 | IPv4 주소 |
+| NS | `RRType.NS` | 2 | 네임 서버 |
+| CNAME | `RRType.CNAME` | 5 | 정식 이름 (별칭) |
+| SOA | `RRType.SOA` | 6 | 권한 시작 |
+| PTR | `RRType.PTR` | 12 | 역방향 DNS 포인터 |
+| HINFO | `RRType.HINFO` | 13 | 호스트 정보 |
+| MX | `RRType.MX` | 15 | 메일 교환기 |
+| TXT | `RRType.TXT` | 16 | 텍스트 레코드 |
+| RP | `RRType.RP` | 17 | 담당자 |
+| AFSDB | `RRType.AFSDB` | 18 | AFS 데이터베이스 |
+| KEY | `RRType.KEY` | 25 | 보안 키 |
+| AAAA | `RRType.AAAA` | 28 | IPv6 주소 |
+| LOC | `RRType.LOC` | 29 | 지리적 위치 |
+| SRV | `RRType.SRV` | 33 | 서비스 위치 |
+| NAPTR | `RRType.NAPTR` | 35 | 네이밍 권한 포인터 |
+| KX | `RRType.KX` | 36 | 키 교환기 |
+| CERT | `RRType.CERT` | 37 | 인증서 |
+| APL | `RRType.APL` | 42 | 주소 접두사 목록 |
+| IPSECKEY | `RRType.IPSECKEY` | 45 | IPsec 키 |
+| NSEC | `RRType.NSEC` | 47 | 다음 보안 (DNSSEC) |
+| DNSKEY | `RRType.DNSKEY` | 48 | DNS 키 (DNSSEC) |
+| DHCID | `RRType.DHCID` | 49 | DHCP 식별자 |
+| NSEC3PARAM | `RRType.NSEC3PARAM` | 51 | NSEC3 매개변수 |
+| SMIMEA | `RRType.SMIMEA` | 53 | S/MIME 인증서 |
+| HIP | `RRType.HIP` | 55 | 호스트 ID 프로토콜 |
+| CDS | `RRType.CDS` | 59 | 자식 DS (DNSSEC) |
+| SVCB | `RRType.SVCB` | 64 | 서비스 바인딩 |
+| HTTPS | `RRType.HTTPS` | 65 | HTTPS 바인딩 |
+| EUI48 | `RRType.EUI48` | 108 | MAC 주소 (48비트) |
+| EUI64 | `RRType.EUI64` | 109 | MAC 주소 (64비트) |
+| URI | `RRType.URI` | 256 | URI 매핑 |
+| CAA | `RRType.CAA` | 257 | CA 권한 |
+| TA | `RRType.TA` | 32768 | 신뢰 앵커 |
+| DLV | `RRType.DLV` | 32769 | DNSSEC 룩어사이드 |
 
 **커스텀 레코드 타입:**
 
 ```dart
-// CAA 레코드 (타입 257)
-final caaType = RRType('CAA', 257);
-final caaRecords = await dns.lookupDataByRRType('example.com', caaType);
+// TLSA 레코드 (타입 52)
+final tlsaType = RRType('TLSA', 52);
+final tlsaRecords = await dns.lookupDataByRRType('example.com', tlsaType);
 ```
 
 ### 응답 클래스

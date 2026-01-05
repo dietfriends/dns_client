@@ -8,13 +8,13 @@ void main() async {
   });
 
   final responseSRV =
-      await dns.lookupDataByRRType('_jmap._tcp.linagora.com', RRType.SRVType);
+      await dns.lookupDataByRRType('_jmap._tcp.linagora.com', RRType.SRV);
   responseSRV.forEach((address) {
     print('DnsOverHttps.google::lookupRRType:Address: ${address.toString()}');
   });
 
   final dnsCloudflare = DnsOverHttps.cloudflare();
-  final responseSRVCloudflare = await dnsCloudflare.lookupDataByRRType('_jmap._tcp.linagora.com', RRType.SRVType);
+  final responseSRVCloudflare = await dnsCloudflare.lookupDataByRRType('_jmap._tcp.linagora.com', RRType.SRV);
   responseSRVCloudflare.forEach((address) {
     print('DnsOverHttps.cloudflare::lookupRRType:Address: ${address.toString()}');
   });
