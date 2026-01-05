@@ -6,6 +6,13 @@
 - Replace deprecated pedantic with lints package
 - Update all dependencies for Dart 3 compatibility
 
+## [1.1.0](https://github.com/amondnet/dns_client/compare/v1.0.0...v1.1.0) (2026-01-05)
+
+
+### Features
+
+* add AdGuard DNS provider support ([#15](https://github.com/amondnet/dns_client/issues/15)) ([8d2c0d7](https://github.com/amondnet/dns_client/commit/8d2c0d780635f819dc98b07f3ed032c5832e3a51)), closes [#14](https://github.com/amondnet/dns_client/issues/14)
+
 ## [1.0.0](https://github.com/amondnet/dns_client/compare/v0.2.1...v1.0.0) (2026-01-05)
 
 
