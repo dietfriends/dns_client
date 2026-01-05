@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dns_client/dns_client.dart';
-import 'package:dns_client/src/rr_type.dart';
 
 class DnsOverHttps extends DnsClient {
   final _client = HttpClient();
@@ -80,7 +79,8 @@ class DnsOverHttps extends DnsClient {
     await for (var data in response.transform(utf8.decoder)) {
       contents.write(data);
     }
-    final record = DnsRecord.fromJson(jsonDecode(contents.toString()));
+    final record = DnsRecord.fromJson(
+        jsonDecode(contents.toString()) as Map<String, dynamic>);
     return record;
   }
 
@@ -118,7 +118,8 @@ class DnsOverHttps extends DnsClient {
     await for (var data in response.transform(utf8.decoder)) {
       contents.write(data);
     }
-    final record = DnsRecord.fromJson(jsonDecode(contents.toString()));
+    final record = DnsRecord.fromJson(
+        jsonDecode(contents.toString()) as Map<String, dynamic>);
     return record;
   }
 

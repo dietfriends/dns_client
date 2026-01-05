@@ -8,16 +8,18 @@ on:
   pull_request:
     branches:
       - master
+
 jobs:
   build:
     strategy:
       matrix:
-        sdk: [ 2.14.0, 2.15.0, stable ]
-    runs-on: ubuntu-18.04
+        sdk: [3.7.0, stable]
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ matrix.sdk }}
-      - run: pub get
-      - run: pub run test
+      - run: dart pub get
+      - run: dart analyze
+      - run: dart test
