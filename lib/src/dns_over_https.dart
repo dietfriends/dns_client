@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dns_client/dns_client.dart';
 
-import 'dns_record.dart';
+import 'dns_client.dart';
 
 class DnsOverHttps extends DnsClient {
   final _client = HttpClient();
@@ -17,10 +16,11 @@ class DnsOverHttps extends DnsClient {
   /// Default timeout for operations.
   final Duration? timeout;
 
-  DnsOverHttps(this.url,
-      {this.timeout = const Duration(milliseconds: 5000),
-      this.maximalPrivacy = false})
-      : _uri = Uri.parse(url) {
+  DnsOverHttps(
+    this.url, {
+    this.timeout = const Duration(milliseconds: 5000),
+    this.maximalPrivacy = false,
+  }) : _uri = Uri.parse(url) {
     _client.connectionTimeout = timeout;
   }
 
@@ -32,6 +32,7 @@ class DnsOverHttps extends DnsClient {
   /// closed connections will receive an error event to indicate that the client
   /// was shut down. In both cases trying to establish a new connection after
   /// calling [close] will throw an exception.
+  @override
   void close({bool force = false}) {
     _client.close(force: force);
   }
@@ -41,45 +42,61 @@ class DnsOverHttps extends DnsClient {
   }
 
   factory DnsOverHttps.cloudflare({Duration? timeout}) {
-    return DnsOverHttps('https://cloudflare-dns.com/dns-query',
-        timeout: timeout);
+    return DnsOverHttps(
+      'https://cloudflare-dns.com/dns-query',
+      timeout: timeout,
+    );
   }
 
   @override
-  Future<List<InternetAddress>> lookup(String hostname) {
-    return lookupHttps(hostname).then((record) {
-      return record.answer
-              ?.where((answer) => answer.type == 1)
-              .map((answer) => InternetAddress(answer.data))
-              .toList() ??
-          [];
-    });
-  }
+  Future<List<InternetAddress>> lookup(
+    String hostname, {
+    DnsRecordType? type,
+  }) async {
+    final record = await lookupRecord(
+      hostname,
+      type: type ?? DnsRecordType.ANY,
+    );
 
-  Future<DnsRecord> lookupHttps(String hostname,
-      {InternetAddressType type = InternetAddressType.any}) async {
-    // Build URL
-    var query = {'name': hostname};
-    // Add: IPv4 or IPv6?
-    if (type == InternetAddressType.any || type == InternetAddressType.IPv4) {
-      query['type'] = 'A';
+    Iterable<Answer> l = record.answer ?? [];
+
+    if (type != null) {
+      l = l.where((r) => r.recordType == type);
     } else {
-      query['type'] = 'AAAA';
+      l = l.where(
+        (r) =>
+            r.recordType == DnsRecordType.A ||
+            r.recordType == DnsRecordType.AAAA,
+      );
     }
 
-    // Hide my IP?
+    var addressesAsync = l
+        .map((answer) => answer.asInternetAddressAsync)
+        .toList();
+
+    var addresses = await Future.wait(addressesAsync);
+
+    return addresses;
+  }
+
+  @override
+  Future<DnsRecord> lookupRecord(
+    String hostname, {
+    DnsRecordType type = DnsRecordType.ANY,
+  }) async {
+    var query = {'name': hostname, 'type': type.value};
+
     if (maximalPrivacy) {
       query['edns_client_subnet'] = '0.0.0.0/0';
     }
-    final request =
-        await _client.getUrl(Uri.https(_uri.authority, _uri.path, query));
+
+    final request = await _client.getUrl(
+      Uri.https(_uri.authority, _uri.path, query),
+    );
     request.headers.set('accept', 'application/dns-json');
+
     final response = await request.close();
-    final contents = StringBuffer();
-    await for (var data in response.transform(utf8.decoder)) {
-      contents.write(data);
-    }
-    final record = DnsRecord.fromJson(jsonDecode(contents.toString()));
-    return record;
+    final contents = await response.transform(utf8.decoder).join();
+    return DnsRecord.fromJson(jsonDecode(contents));
   }
 }
