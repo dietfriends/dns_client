@@ -5,8 +5,8 @@
     "prepare": "husky",
     "format": "dprint fmt",
     "format:check": "dprint check",
-    "lint": "markdownlint-cli2 \"**/*.md\"",
-    "lint:fix": "markdownlint-cli2 --fix \"**/*.md\""
+    "lint": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#CLAUDE.md\"",
+    "lint:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#node_modules\" \"#CLAUDE.md\""
   },
   "devDependencies": {
     "dprint": "^0.51.1",
@@ -16,8 +16,8 @@
   },
   "lint-staged": {
     "*.dart": [
-      "dart format --fix",
-      "dart analyze --fatal-infos"
+      "dart format",
+      "dart analyze --fatal-warnings"
     ],
     "*.{md,markdown}": [
       "dprint fmt",

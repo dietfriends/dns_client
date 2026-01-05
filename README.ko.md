@@ -189,61 +189,61 @@ dns.close();
 
 **생성자:**
 
-| 생성자 | 설명 |
-|--------|------|
+| 생성자                                         | 설명                       |
+| ---------------------------------------------- | -------------------------- |
 | `DnsOverHttps(url, {timeout, maximalPrivacy})` | 사용자 정의 DoH 엔드포인트 |
-| `DnsOverHttps.google({timeout})` | Google DNS (dns.google) |
-| `DnsOverHttps.cloudflare({timeout})` | Cloudflare DNS (1.1.1.1) |
+| `DnsOverHttps.google({timeout})`               | Google DNS (dns.google)    |
+| `DnsOverHttps.cloudflare({timeout})`           | Cloudflare DNS (1.1.1.1)   |
 
 **메서드:**
 
-| 메서드 | 반환 타입 | 설명 |
-|--------|-----------|------|
-| `lookup(hostname)` | `Future<List<InternetAddress>>` | 호스트명을 IP 주소로 해석 |
-| `lookupDataByRRType(hostname, rrType)` | `Future<List<String>>` | 특정 레코드 타입 조회 |
-| `lookupHttpsByRRType(hostname, rrType)` | `Future<DnsRecord>` | 전체 DNS 응답 가져오기 |
-| `close({force})` | `void` | HTTP 클라이언트 종료 |
+| 메서드                                  | 반환 타입                       | 설명                      |
+| --------------------------------------- | ------------------------------- | ------------------------- |
+| `lookup(hostname)`                      | `Future<List<InternetAddress>>` | 호스트명을 IP 주소로 해석 |
+| `lookupDataByRRType(hostname, rrType)`  | `Future<List<String>>`          | 특정 레코드 타입 조회     |
+| `lookupHttpsByRRType(hostname, rrType)` | `Future<DnsRecord>`             | 전체 DNS 응답 가져오기    |
+| `close({force})`                        | `void`                          | HTTP 클라이언트 종료      |
 
 ### 지원하는 레코드 타입 (RRType)
 
-| 타입 | 상수 | 값 | 설명 |
-|------|------|-----|------|
-| A | `RRType.A` | 1 | IPv4 주소 |
-| NS | `RRType.NS` | 2 | 네임 서버 |
-| CNAME | `RRType.CNAME` | 5 | 정식 이름 (별칭) |
-| SOA | `RRType.SOA` | 6 | 권한 시작 |
-| PTR | `RRType.PTR` | 12 | 역방향 DNS 포인터 |
-| HINFO | `RRType.HINFO` | 13 | 호스트 정보 |
-| MX | `RRType.MX` | 15 | 메일 교환기 |
-| TXT | `RRType.TXT` | 16 | 텍스트 레코드 |
-| RP | `RRType.RP` | 17 | 담당자 |
-| AFSDB | `RRType.AFSDB` | 18 | AFS 데이터베이스 |
-| KEY | `RRType.KEY` | 25 | 보안 키 |
-| AAAA | `RRType.AAAA` | 28 | IPv6 주소 |
-| LOC | `RRType.LOC` | 29 | 지리적 위치 |
-| SRV | `RRType.SRV` | 33 | 서비스 위치 |
-| NAPTR | `RRType.NAPTR` | 35 | 네이밍 권한 포인터 |
-| KX | `RRType.KX` | 36 | 키 교환기 |
-| CERT | `RRType.CERT` | 37 | 인증서 |
-| APL | `RRType.APL` | 42 | 주소 접두사 목록 |
-| DS | `RRType.DS` | 43 | 위임 서명자 (DNSSEC) |
-| IPSECKEY | `RRType.IPSECKEY` | 45 | IPsec 키 |
-| NSEC | `RRType.NSEC` | 47 | 다음 보안 (DNSSEC) |
-| DNSKEY | `RRType.DNSKEY` | 48 | DNS 키 (DNSSEC) |
-| DHCID | `RRType.DHCID` | 49 | DHCP 식별자 |
-| NSEC3 | `RRType.NSEC3` | 50 | 해시 기반 부재 증명 (DNSSEC) |
-| NSEC3PARAM | `RRType.NSEC3PARAM` | 51 | NSEC3 매개변수 |
-| SMIMEA | `RRType.SMIMEA` | 53 | S/MIME 인증서 |
-| HIP | `RRType.HIP` | 55 | 호스트 ID 프로토콜 |
-| CDS | `RRType.CDS` | 59 | 자식 DS (DNSSEC) |
-| SVCB | `RRType.SVCB` | 64 | 서비스 바인딩 |
-| HTTPS | `RRType.HTTPS` | 65 | HTTPS 바인딩 |
-| EUI48 | `RRType.EUI48` | 108 | MAC 주소 (48비트) |
-| EUI64 | `RRType.EUI64` | 109 | MAC 주소 (64비트) |
-| URI | `RRType.URI` | 256 | URI 매핑 |
-| CAA | `RRType.CAA` | 257 | CA 권한 |
-| TA | `RRType.TA` | 32768 | 신뢰 앵커 |
-| DLV | `RRType.DLV` | 32769 | DNSSEC 룩어사이드 |
+| 타입       | 상수                | 값    | 설명                         |
+| ---------- | ------------------- | ----- | ---------------------------- |
+| A          | `RRType.A`          | 1     | IPv4 주소                    |
+| NS         | `RRType.NS`         | 2     | 네임 서버                    |
+| CNAME      | `RRType.CNAME`      | 5     | 정식 이름 (별칭)             |
+| SOA        | `RRType.SOA`        | 6     | 권한 시작                    |
+| PTR        | `RRType.PTR`        | 12    | 역방향 DNS 포인터            |
+| HINFO      | `RRType.HINFO`      | 13    | 호스트 정보                  |
+| MX         | `RRType.MX`         | 15    | 메일 교환기                  |
+| TXT        | `RRType.TXT`        | 16    | 텍스트 레코드                |
+| RP         | `RRType.RP`         | 17    | 담당자                       |
+| AFSDB      | `RRType.AFSDB`      | 18    | AFS 데이터베이스             |
+| KEY        | `RRType.KEY`        | 25    | 보안 키                      |
+| AAAA       | `RRType.AAAA`       | 28    | IPv6 주소                    |
+| LOC        | `RRType.LOC`        | 29    | 지리적 위치                  |
+| SRV        | `RRType.SRV`        | 33    | 서비스 위치                  |
+| NAPTR      | `RRType.NAPTR`      | 35    | 네이밍 권한 포인터           |
+| KX         | `RRType.KX`         | 36    | 키 교환기                    |
+| CERT       | `RRType.CERT`       | 37    | 인증서                       |
+| APL        | `RRType.APL`        | 42    | 주소 접두사 목록             |
+| DS         | `RRType.DS`         | 43    | 위임 서명자 (DNSSEC)         |
+| IPSECKEY   | `RRType.IPSECKEY`   | 45    | IPsec 키                     |
+| NSEC       | `RRType.NSEC`       | 47    | 다음 보안 (DNSSEC)           |
+| DNSKEY     | `RRType.DNSKEY`     | 48    | DNS 키 (DNSSEC)              |
+| DHCID      | `RRType.DHCID`      | 49    | DHCP 식별자                  |
+| NSEC3      | `RRType.NSEC3`      | 50    | 해시 기반 부재 증명 (DNSSEC) |
+| NSEC3PARAM | `RRType.NSEC3PARAM` | 51    | NSEC3 매개변수               |
+| SMIMEA     | `RRType.SMIMEA`     | 53    | S/MIME 인증서                |
+| HIP        | `RRType.HIP`        | 55    | 호스트 ID 프로토콜           |
+| CDS        | `RRType.CDS`        | 59    | 자식 DS (DNSSEC)             |
+| SVCB       | `RRType.SVCB`       | 64    | 서비스 바인딩                |
+| HTTPS      | `RRType.HTTPS`      | 65    | HTTPS 바인딩                 |
+| EUI48      | `RRType.EUI48`      | 108   | MAC 주소 (48비트)            |
+| EUI64      | `RRType.EUI64`      | 109   | MAC 주소 (64비트)            |
+| URI        | `RRType.URI`        | 256   | URI 매핑                     |
+| CAA        | `RRType.CAA`        | 257   | CA 권한                      |
+| TA         | `RRType.TA`         | 32768 | 신뢰 앵커                    |
+| DLV        | `RRType.DLV`        | 32769 | DNSSEC 룩어사이드            |
 
 **커스텀 레코드 타입:**
 
@@ -257,32 +257,34 @@ final tlsaRecords = await dns.lookupDataByRRType('example.com', tlsaType);
 
 **DnsRecord:**
 
-| 속성 | 타입 | 설명 |
-|------|------|------|
-| `status` | `int` | DNS 응답 코드 |
-| `answer` | `List<Answer>?` | DNS 응답 목록 |
-| `isSuccess` | `bool` | status == 0이면 true |
-| `isFailure` | `bool` | status != 0이면 true |
-| `isNxDomain` | `bool` | status == 3이면 true |
-| `isServerFailure` | `bool` | status == 2이면 true |
+| 속성              | 타입            | 설명                 |
+| ----------------- | --------------- | -------------------- |
+| `status`          | `int`           | DNS 응답 코드        |
+| `answer`          | `List<Answer>?` | DNS 응답 목록        |
+| `isSuccess`       | `bool`          | status == 0이면 true |
+| `isFailure`       | `bool`          | status != 0이면 true |
+| `isNxDomain`      | `bool`          | status == 3이면 true |
+| `isServerFailure` | `bool`          | status == 2이면 true |
 
 **Answer:**
 
-| 속성 | 타입 | 설명 |
-|------|------|------|
-| `name` | `String` | 도메인 이름 |
-| `type` | `int` | 레코드 타입 코드 |
-| `TTL` | `int` | 유효 시간 (초) |
-| `data` | `String` | 레코드 데이터 |
+| 속성   | 타입     | 설명             |
+| ------ | -------- | ---------------- |
+| `name` | `String` | 도메인 이름      |
+| `type` | `int`    | 레코드 타입 코드 |
+| `TTL`  | `int`    | 유효 시간 (초)   |
+| `data` | `String` | 레코드 데이터    |
 
 ### 예외
 
 **DnsLookupException** - DNS 쿼리 실패 시 발생:
+
 - `hostname` - 조회한 호스트명
 - `status` - DNS 상태 코드 (2=SERVFAIL, 3=NXDOMAIN 등)
 - `message` - 오류 설명
 
 **DnsHttpException** - HTTP 요청 실패 시 발생:
+
 - `statusCode` - HTTP 상태 코드
 - `message` - 오류 설명
 
