@@ -68,7 +68,7 @@ class DnsOverHttps extends DnsClient {
     );
   }
 
-  /// AdGuard DNS with family protection (blocks adult content).
+  /// AdGuard DNS with family protection (blocks ads, trackers, and adult content).
   ///
   /// [AdGuard DNS documentation](https://adguard-dns.io/kb/general/dns-providers/)
   factory DnsOverHttps.adguardFamily({Duration? timeout}) {

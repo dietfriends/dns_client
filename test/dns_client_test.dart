@@ -40,6 +40,7 @@ void main() {
       final address = await client.lookup('google.com');
       expect(address, isNotNull);
       expect(address.isNotEmpty, isTrue);
+      client.close();
     });
 
     test('non-filtering lookup( google.com )', () async {
@@ -47,6 +48,7 @@ void main() {
       final address = await client.lookup('google.com');
       expect(address, isNotNull);
       expect(address.isNotEmpty, isTrue);
+      client.close();
     });
 
     test('family lookup( google.com )', () async {
@@ -54,6 +56,13 @@ void main() {
       final address = await client.lookup('google.com');
       expect(address, isNotNull);
       expect(address.isNotEmpty, isTrue);
+      client.close();
+    });
+
+    test('close', () async {
+      final client = DnsOverHttps.adguard();
+      client.close();
+      expect(client.lookup('google.com'), throwsA(isA<StateError>()));
     });
   });
 }
