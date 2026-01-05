@@ -33,4 +33,27 @@ void main() {
       expect(client.lookup('api.google.com'), throwsA(isA<StateError>()));
     });
   });
+
+  group('HttpDnsClient AdGuard', () {
+    test('lookup( google.com )', () async {
+      final client = DnsOverHttps.adguard();
+      final address = await client.lookup('google.com');
+      expect(address, isNotNull);
+      expect(address.isNotEmpty, isTrue);
+    });
+
+    test('non-filtering lookup( google.com )', () async {
+      final client = DnsOverHttps.adguardNonFiltering();
+      final address = await client.lookup('google.com');
+      expect(address, isNotNull);
+      expect(address.isNotEmpty, isTrue);
+    });
+
+    test('family lookup( google.com )', () async {
+      final client = DnsOverHttps.adguardFamily();
+      final address = await client.lookup('google.com');
+      expect(address, isNotNull);
+      expect(address.isNotEmpty, isTrue);
+    });
+  });
 }

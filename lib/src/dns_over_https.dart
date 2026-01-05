@@ -15,10 +15,11 @@ class DnsOverHttps extends DnsClient {
   /// Default timeout for operations.
   final Duration? timeout;
 
-  DnsOverHttps(this.url,
-      {this.timeout = const Duration(milliseconds: 5000),
-      this.maximalPrivacy = false})
-      : _uri = Uri.parse(url) {
+  DnsOverHttps(
+    this.url, {
+    this.timeout = const Duration(milliseconds: 5000),
+    this.maximalPrivacy = false,
+  }) : _uri = Uri.parse(url) {
     _client.connectionTimeout = timeout;
   }
 
@@ -41,8 +42,40 @@ class DnsOverHttps extends DnsClient {
 
   /// [Cloudflare DNS-over-HTTPS documentation](https://developers.cloudflare.com/1.1.1.1/dns-over-https/json-format/)
   factory DnsOverHttps.cloudflare({Duration? timeout}) {
-    return DnsOverHttps('https://cloudflare-dns.com/dns-query',
-        timeout: timeout);
+    return DnsOverHttps(
+      'https://cloudflare-dns.com/dns-query',
+      timeout: timeout,
+    );
+  }
+
+  /// AdGuard DNS with default filtering (blocks ads and trackers).
+  ///
+  /// [AdGuard DNS documentation](https://adguard-dns.io/kb/general/dns-providers/)
+  factory DnsOverHttps.adguard({Duration? timeout}) {
+    return DnsOverHttps(
+      'https://dns.adguard-dns.com/resolve',
+      timeout: timeout,
+    );
+  }
+
+  /// AdGuard DNS without filtering.
+  ///
+  /// [AdGuard DNS documentation](https://adguard-dns.io/kb/general/dns-providers/)
+  factory DnsOverHttps.adguardNonFiltering({Duration? timeout}) {
+    return DnsOverHttps(
+      'https://unfiltered.adguard-dns.com/resolve',
+      timeout: timeout,
+    );
+  }
+
+  /// AdGuard DNS with family protection (blocks adult content).
+  ///
+  /// [AdGuard DNS documentation](https://adguard-dns.io/kb/general/dns-providers/)
+  factory DnsOverHttps.adguardFamily({Duration? timeout}) {
+    return DnsOverHttps(
+      'https://family.adguard-dns.com/resolve',
+      timeout: timeout,
+    );
   }
 
   @override
@@ -56,8 +89,10 @@ class DnsOverHttps extends DnsClient {
     });
   }
 
-  Future<DnsRecord> lookupHttps(String hostname,
-      {InternetAddressType type = InternetAddressType.any}) async {
+  Future<DnsRecord> lookupHttps(
+    String hostname, {
+    InternetAddressType type = InternetAddressType.any,
+  }) async {
     // Build URL
     var query = {'name': hostname};
     // Add: IPv4 or IPv6?
@@ -71,8 +106,9 @@ class DnsOverHttps extends DnsClient {
     if (maximalPrivacy) {
       query['edns_client_subnet'] = '0.0.0.0/0';
     }
-    final request =
-        await _client.getUrl(Uri.https(_uri.authority, _uri.path, query));
+    final request = await _client.getUrl(
+      Uri.https(_uri.authority, _uri.path, query),
+    );
     request.headers.set('accept', 'application/dns-json');
     final response = await request.close();
     final contents = StringBuffer();
@@ -80,7 +116,8 @@ class DnsOverHttps extends DnsClient {
       contents.write(data);
     }
     final record = DnsRecord.fromJson(
-        jsonDecode(contents.toString()) as Map<String, dynamic>);
+      jsonDecode(contents.toString()) as Map<String, dynamic>,
+    );
     return record;
   }
 
@@ -91,17 +128,15 @@ class DnsOverHttps extends DnsClient {
   /// Throws [DnsHttpException] if the HTTP request fails (non-200 status).
   Future<DnsRecord> lookupHttpsByRRType(String hostname, RRType rrType) async {
     // Build URL
-    var query = {
-      'name': hostname,
-      'type': '${rrType.value}',
-    };
+    var query = {'name': hostname, 'type': '${rrType.value}'};
 
     // Hide my IP?
     if (maximalPrivacy) {
       query['edns_client_subnet'] = '0.0.0.0/0';
     }
-    final request =
-        await _client.getUrl(Uri.https(_uri.authority, _uri.path, query));
+    final request = await _client.getUrl(
+      Uri.https(_uri.authority, _uri.path, query),
+    );
     request.headers.set('accept', 'application/dns-json');
     final response = await request.close();
 
@@ -119,7 +154,8 @@ class DnsOverHttps extends DnsClient {
       contents.write(data);
     }
     final record = DnsRecord.fromJson(
-        jsonDecode(contents.toString()) as Map<String, dynamic>);
+      jsonDecode(contents.toString()) as Map<String, dynamic>,
+    );
     return record;
   }
 
@@ -140,7 +176,10 @@ class DnsOverHttps extends DnsClient {
   /// );
   /// ```
   @override
-  Future<List<String>> lookupDataByRRType(String hostname, RRType rrType) async {
+  Future<List<String>> lookupDataByRRType(
+    String hostname,
+    RRType rrType,
+  ) async {
     final record = await lookupHttpsByRRType(hostname, rrType);
 
     // Check for DNS-level errors
