@@ -38,6 +38,10 @@ class DnsWireCodec {
   /// Size of DNS header in bytes.
   static const int headerSize = 12;
 
+  /// Maximum compression pointer jumps to prevent infinite loops.
+  /// DNS messages are limited in size, so 10 jumps is generous.
+  static const int _maxCompressionJumps = 10;
+
   final Random _random;
 
   /// Creates a new DNS wire codec.
@@ -137,18 +141,21 @@ class DnsWireCodec {
         // Calculate pointer offset
         final pointerOffset = ((length & 0x3F) << 8) | data[pos + 1];
 
+        // Compression pointer must point to earlier position in message
+        // (cannot point to current name field or beyond to prevent cycles)
         if (pointerOffset >= offset) {
           throw DnsWireFormatException(
-            'Forward compression pointer not allowed',
+            'Invalid compression pointer: points to $pointerOffset but '
+            'current name starts at $offset',
             offset: pos,
           );
         }
 
-        // Prevent infinite loops
+        // Prevent infinite loops from malformed messages
         jumpCount++;
-        if (jumpCount > 10) {
+        if (jumpCount > _maxCompressionJumps) {
           throw DnsWireFormatException(
-            'Too many compression pointer jumps',
+            'Too many compression pointer jumps (max: $_maxCompressionJumps)',
             offset: pos,
           );
         }
@@ -401,6 +408,13 @@ class DnsWireCodec {
         return name;
 
       case 15: // MX
+        // MX: 2 bytes preference + exchange domain name (at least 1 byte)
+        if (rdlength < 3) {
+          throw DnsWireFormatException(
+            'Invalid MX record length: $rdlength (minimum: 3)',
+            offset: offset,
+          );
+        }
         final view = ByteData.sublistView(data);
         final preference = view.getUint16(offset, Endian.big);
         final (exchange, _) = decodeDomainName(data, offset + 2);

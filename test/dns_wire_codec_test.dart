@@ -297,6 +297,88 @@ void main() {
       });
     });
 
+    group('malformed record validation', () {
+      test('throws on domain name exceeding 255 bytes', () {
+        // Create a domain with many labels that exceeds 255 bytes total
+        // Each label is 6 chars + 1 length byte = 7 bytes, 40 labels = 280 bytes
+        final longDomain = List.generate(40, (i) => 'abcdef').join('.');
+        expect(
+          () => codec.encodeDomainName(longDomain),
+          throwsA(isA<DnsWireFormatException>()),
+        );
+      });
+
+      test('throws on invalid A record length', () {
+        // A record with 3 bytes instead of 4
+        final response = _buildDnsResponse(
+          transactionId: 0x1234,
+          flags: 0x8180,
+          questions: [('example.com', 1, 1)],
+          answers: [
+            ('example.com', 1, 300, Uint8List.fromList([1, 2, 3])),
+          ],
+        );
+        expect(
+          () => codec.decodeResponse(response),
+          throwsA(isA<DnsWireFormatException>()),
+        );
+      });
+
+      test('throws on invalid AAAA record length', () {
+        // AAAA record with 8 bytes instead of 16
+        final response = _buildDnsResponse(
+          transactionId: 0x1234,
+          flags: 0x8180,
+          questions: [('example.com', 28, 1)],
+          answers: [('example.com', 28, 300, Uint8List(8))],
+        );
+        expect(
+          () => codec.decodeResponse(response),
+          throwsA(isA<DnsWireFormatException>()),
+        );
+      });
+
+      test('throws on invalid MX record length', () {
+        // MX record with only 1 byte (needs at least 3)
+        final response = _buildDnsResponse(
+          transactionId: 0x1234,
+          flags: 0x8180,
+          questions: [('example.com', 15, 1)],
+          answers: [
+            ('example.com', 15, 300, Uint8List.fromList([1])),
+          ],
+        );
+        expect(
+          () => codec.decodeResponse(response),
+          throwsA(isA<DnsWireFormatException>()),
+        );
+      });
+
+      test('throws on compression pointer loop (too many jumps)', () {
+        // Create data with circular compression pointers
+        // This will cause repeated jumps until the limit is hit
+        final data = Uint8List.fromList([
+          // Offset 0: pointer to offset 2
+          0xC0, 0x02,
+          // Offset 2: pointer to offset 0 (creates cycle)
+          0xC0, 0x00,
+        ]);
+        expect(
+          () => codec.decodeDomainName(data, 0),
+          throwsA(isA<DnsWireFormatException>()),
+        );
+      });
+
+      test('throws on invalid label type', () {
+        // Label type 0x40 is reserved/invalid
+        final data = Uint8List.fromList([0x40, 0x00]);
+        expect(
+          () => codec.decodeDomainName(data, 0),
+          throwsA(isA<DnsWireFormatException>()),
+        );
+      });
+    });
+
     group('DnsWireFormatException', () {
       test('includes offset in toString when provided', () {
         final exception = DnsWireFormatException('Test error', offset: 42);

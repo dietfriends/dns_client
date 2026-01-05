@@ -91,8 +91,8 @@ void main() {
         await client.lookup('example.com'); // Should work
         client.close();
 
-        // After close, new lookups should fail
-        expect(() => client.lookup('example.com'), throwsA(anything));
+        // After close, new lookups should fail with StateError
+        expect(() => client.lookup('example.com'), throwsA(isA<StateError>()));
       });
     });
 

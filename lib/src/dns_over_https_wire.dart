@@ -36,6 +36,7 @@ class DnsOverHttpsWire extends DnsClient {
   final Duration? timeout;
 
   ClientTransportConnection? _transport;
+  Completer<ClientTransportConnection>? _connecting;
   bool _closed = false;
 
   /// Creates a DNS-over-HTTPS wire format client.
@@ -110,6 +111,16 @@ class DnsOverHttpsWire extends DnsClient {
   @override
   Future<List<InternetAddress>> lookup(String hostname) async {
     final record = await lookupWire(hostname, RRType.A);
+
+    // Check for DNS-level errors (consistent with lookupDataByRRType)
+    if (record.isFailure) {
+      throw DnsLookupException(
+        'DNS lookup failed for $hostname',
+        hostname: hostname,
+        status: record.status,
+      );
+    }
+
     return record.answer
             ?.where((answer) => answer.type == RRType.A.value)
             .map((answer) => InternetAddress(answer.data))
@@ -172,68 +183,103 @@ class DnsOverHttpsWire extends DnsClient {
       Header.ascii('content-length', queryBytes.length.toString()),
     ];
 
-    // Create stream and send request
-    final stream = transport.makeRequest(headers, endStream: false);
-    stream.outgoingMessages.add(DataStreamMessage(queryBytes, endStream: true));
+    try {
+      // Create stream and send request
+      final stream = transport.makeRequest(headers, endStream: false);
+      stream.outgoingMessages.add(
+        DataStreamMessage(queryBytes, endStream: true),
+      );
 
-    // Read response
-    int? statusCode;
-    final responseData = BytesBuilder();
+      // Read response
+      int? statusCode;
+      final responseData = BytesBuilder();
 
-    await for (final message in stream.incomingMessages) {
-      if (message is HeadersStreamMessage) {
-        for (final header in message.headers) {
-          final name = String.fromCharCodes(header.name);
-          if (name == ':status') {
-            statusCode = int.tryParse(String.fromCharCodes(header.value));
+      await for (final message in stream.incomingMessages) {
+        if (message is HeadersStreamMessage) {
+          for (final header in message.headers) {
+            final name = String.fromCharCodes(header.name);
+            if (name == ':status') {
+              statusCode = int.tryParse(String.fromCharCodes(header.value));
+            }
           }
+        } else if (message is DataStreamMessage) {
+          responseData.add(message.bytes);
         }
-      } else if (message is DataStreamMessage) {
-        responseData.add(message.bytes);
       }
-    }
 
-    // Validate HTTP response status
-    if (statusCode != 200) {
+      // Validate HTTP response status
+      if (statusCode != 200) {
+        throw DnsHttpException(
+          'DNS-over-HTTPS request failed for $hostname',
+          statusCode: statusCode ?? 0,
+        );
+      }
+
+      // Decode wire format response
+      return _codec.decodeResponse(responseData.toBytes());
+    } on DnsHttpException {
+      rethrow;
+    } on DnsWireFormatException {
+      rethrow;
+    } catch (e) {
+      // Invalidate transport on stream/connection errors
+      _transport = null;
       throw DnsHttpException(
-        'DNS-over-HTTPS request failed',
-        statusCode: statusCode ?? 0,
+        'HTTP/2 stream error during DNS lookup for $hostname: $e',
+        statusCode: 0,
       );
     }
-
-    // Decode wire format response
-    return _codec.decodeResponse(responseData.toBytes());
   }
 
   /// Gets or creates an HTTP/2 transport connection.
+  ///
+  /// Uses a Completer to prevent race conditions when multiple concurrent
+  /// lookups attempt to create a transport connection simultaneously.
   Future<ClientTransportConnection> _getOrCreateTransport() async {
+    // Return existing open connection
     if (_transport != null && _transport!.isOpen) {
       return _transport!;
     }
 
-    // Connect with ALPN to negotiate HTTP/2
-    final socket = await SecureSocket.connect(
-      _uri.host,
-      _uri.port,
-      supportedProtocols: ['h2'],
-      timeout: timeout,
-    );
-
-    // Verify HTTP/2 was negotiated
-    if (socket.selectedProtocol != 'h2') {
-      socket.destroy();
-      throw DnsHttpException(
-        'Server does not support HTTP/2 (got: ${socket.selectedProtocol})',
-        statusCode: 0,
-      );
+    // Wait for in-progress connection attempt
+    if (_connecting != null) {
+      return _connecting!.future;
     }
 
+    // Start new connection attempt
+    _connecting = Completer<ClientTransportConnection>();
+
     try {
-      _transport = ClientTransportConnection.viaSocket(socket);
-      return _transport!;
+      // Connect with ALPN to negotiate HTTP/2
+      final socket = await SecureSocket.connect(
+        _uri.host,
+        _uri.port,
+        supportedProtocols: ['h2'],
+        timeout: timeout,
+      );
+
+      // Verify HTTP/2 was negotiated
+      if (socket.selectedProtocol != 'h2') {
+        socket.destroy();
+        throw DnsHttpException(
+          'Server does not support HTTP/2 (got: ${socket.selectedProtocol})',
+          statusCode: 0,
+        );
+      }
+
+      try {
+        _transport = ClientTransportConnection.viaSocket(socket);
+        _connecting!.complete(_transport);
+        return _transport!;
+      } catch (e) {
+        socket.destroy();
+        rethrow;
+      }
     } catch (e) {
-      socket.destroy();
+      _connecting!.completeError(e);
       rethrow;
+    } finally {
+      _connecting = null;
     }
   }
 }
