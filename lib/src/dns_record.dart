@@ -36,7 +36,7 @@ class DnsHttpException implements Exception {
 }
 
 @freezed
-class DnsRecord with _$DnsRecord {
+abstract class DnsRecord with _$DnsRecord {
   const DnsRecord._(); // Added constructor
   const factory DnsRecord(
       @JsonKey(name: 'Status') int status,
@@ -68,7 +68,7 @@ class DnsRecord with _$DnsRecord {
 }
 
 @freezed
-class Question with _$Question {
+abstract class Question with _$Question {
   const factory Question(String name, int type) = _Question;
 
   factory Question.fromJson(Map<String, dynamic> json) =>
@@ -76,7 +76,7 @@ class Question with _$Question {
 }
 
 @freezed
-class Answer with _$Answer {
+abstract class Answer with _$Answer {
   const factory Answer(String name, int type, int TTL, String data) = _Answer;
 
   factory Answer.fromJson(Map<String, dynamic> json) => _$AnswerFromJson(json);

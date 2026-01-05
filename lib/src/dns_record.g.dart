@@ -6,8 +6,8 @@ part of 'dns_record.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_DnsRecord _$$_DnsRecordFromJson(Map<String, dynamic> json) => _$_DnsRecord(
-      json['Status'] as int,
+_DnsRecord _$DnsRecordFromJson(Map<String, dynamic> json) => _DnsRecord(
+      (json['Status'] as num).toInt(),
       json['TC'] as bool,
       json['RD'] as bool,
       json['RA'] as bool,
@@ -20,7 +20,7 @@ _$_DnsRecord _$$_DnsRecordFromJson(Map<String, dynamic> json) => _$_DnsRecord(
       json['Comment'] as String?,
     );
 
-Map<String, dynamic> _$$_DnsRecordToJson(_$_DnsRecord instance) =>
+Map<String, dynamic> _$DnsRecordToJson(_DnsRecord instance) =>
     <String, dynamic>{
       'Status': instance.status,
       'TC': instance.TC,
@@ -33,25 +33,24 @@ Map<String, dynamic> _$$_DnsRecordToJson(_$_DnsRecord instance) =>
       'Comment': instance.comment,
     };
 
-_$_Question _$$_QuestionFromJson(Map<String, dynamic> json) => _$_Question(
+_Question _$QuestionFromJson(Map<String, dynamic> json) => _Question(
       json['name'] as String,
-      json['type'] as int,
+      (json['type'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$_QuestionToJson(_$_Question instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$QuestionToJson(_Question instance) => <String, dynamic>{
       'name': instance.name,
       'type': instance.type,
     };
 
-_$_Answer _$$_AnswerFromJson(Map<String, dynamic> json) => _$_Answer(
+_Answer _$AnswerFromJson(Map<String, dynamic> json) => _Answer(
       json['name'] as String,
-      json['type'] as int,
-      json['TTL'] as int,
+      (json['type'] as num).toInt(),
+      (json['TTL'] as num).toInt(),
       json['data'] as String,
     );
 
-Map<String, dynamic> _$$_AnswerToJson(_$_Answer instance) => <String, dynamic>{
+Map<String, dynamic> _$AnswerToJson(_Answer instance) => <String, dynamic>{
       'name': instance.name,
       'type': instance.type,
       'TTL': instance.TTL,
