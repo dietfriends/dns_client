@@ -1,37 +1,268 @@
-Dart implementation of DNS-over-HTTPS.
+# dns_client
+
+Dart implementation of DNS-over-HTTPS (DoH).
 
 [![CodeFactor](https://www.codefactor.io/repository/github/dietfriends/dns_client/badge)](https://www.codefactor.io/repository/github/dietfriends/dns_client)
 [![pub.dev](https://badgen.net/pub/v/dns_client)](https://pub.dev/packages/dns_client)
 [![license](https://badgen.net/pub/license/dns_client)](https://github.com/dietfriends/dns_client/blob/master/LICENSE)
 
-## Usage
+[Korean (한국어)](README.ko.md)
 
-A simple usage example:
+## Features
+
+- **Multiple DNS Providers** - Google DNS, Cloudflare DNS, or custom DoH endpoints
+- **All DNS Record Types** - A, AAAA, MX, TXT, SRV, NS, CNAME, PTR, SOA, and custom types
+- **Privacy Protection** - Hide client IP from authoritative nameservers
+- **Error Handling** - Detailed exceptions for DNS and HTTP failures
+- **Dart 3 Support** - Requires Dart SDK 3.7.0+
+
+## Installation
+
+Add to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  dns_client: ^1.0.0
+```
+
+Then run:
+
+```bash
+dart pub get
+```
+
+## Quick Start
 
 ```dart
 import 'package:dns_client/dns_client.dart';
 
-main() async {
+void main() async {
   final dns = DnsOverHttps.google();
-  var response = await dns.lookup('google.com');
-  response.forEach((address) {
-    print(address.toString());
-  });}
+
+  final addresses = await dns.lookup('google.com');
+  for (final address in addresses) {
+    print(address.address);
+  }
+
+  dns.close();
+}
 ```
+
+## Usage Examples
+
+### Basic DNS Lookup
 
 ```dart
-import 'package:dns_client/dns_client.dart';
+// Using Google DNS
+final dns = DnsOverHttps.google();
+final addresses = await dns.lookup('example.com');
+dns.close();
 
-main() async {
-  final dns = DnsOverHttps.cloudflare();
-  var response = await dns.lookup('google.com');
-  response.forEach((address) {
-    print(address.toString());
-  });}
+// Using Cloudflare DNS
+final dns = DnsOverHttps.cloudflare();
+final addresses = await dns.lookup('example.com');
+dns.close();
 ```
 
-## Features and bugs
+### Query Specific Record Types
 
-Please file feature requests and bugs at the [issue tracker][tracker].
+```dart
+final dns = DnsOverHttps.google();
 
-[tracker]: https://github.com/dietfriends/dns_client
+// MX records (mail servers)
+final mxRecords = await dns.lookupDataByRRType('example.com', RRType.MXType);
+print('Mail servers: $mxRecords');
+
+// TXT records (SPF, DKIM, domain verification)
+final txtRecords = await dns.lookupDataByRRType('example.com', RRType.TXTType);
+print('TXT records: $txtRecords');
+
+// SRV records (service discovery)
+final srvRecords = await dns.lookupDataByRRType(
+  '_jmap._tcp.fastmail.com',
+  RRType.SRVType,
+);
+print('SRV records: $srvRecords');
+
+// AAAA records (IPv6)
+final ipv6Records = await dns.lookupDataByRRType('example.com', RRType.AAAAType);
+print('IPv6 addresses: $ipv6Records');
+
+dns.close();
+```
+
+### Custom DNS Provider
+
+```dart
+final dns = DnsOverHttps(
+  'https://dns.quad9.net:5053/dns-query',
+  timeout: Duration(seconds: 10),
+);
+
+final addresses = await dns.lookup('example.com');
+dns.close();
+```
+
+### Privacy Settings
+
+Hide your IP address from authoritative nameservers:
+
+```dart
+final dns = DnsOverHttps(
+  'https://dns.google/resolve',
+  maximalPrivacy: true,  // Sets edns_client_subnet=0.0.0.0/0
+);
+
+final addresses = await dns.lookup('example.com');
+dns.close();
+```
+
+### Timeout Configuration
+
+```dart
+final dns = DnsOverHttps.google(
+  timeout: Duration(seconds: 10),  // Default is 5 seconds
+);
+
+final addresses = await dns.lookup('example.com');
+dns.close();
+```
+
+### Error Handling
+
+```dart
+final dns = DnsOverHttps.google();
+
+try {
+  final records = await dns.lookupDataByRRType(
+    'nonexistent.invalid',
+    RRType.AType,
+  );
+} on DnsLookupException catch (e) {
+  // DNS-level error (NXDOMAIN, SERVFAIL, etc.)
+  print('DNS error: ${e.message}');
+  print('Hostname: ${e.hostname}');
+  print('Status: ${e.status}');  // 3 = NXDOMAIN, 2 = SERVFAIL
+} on DnsHttpException catch (e) {
+  // HTTP-level error
+  print('HTTP error: ${e.statusCode}');
+  print('Message: ${e.message}');
+} finally {
+  dns.close();
+}
+```
+
+### Full Response Inspection
+
+Access the complete DNS response for detailed information:
+
+```dart
+final dns = DnsOverHttps.google();
+
+final record = await dns.lookupHttpsByRRType('example.com', RRType.MXType);
+
+if (record.isSuccess) {
+  print('Status: ${record.status}');  // 0 = NOERROR
+
+  for (final answer in record.answer ?? []) {
+    print('Name: ${answer.name}');
+    print('Type: ${answer.type}');
+    print('TTL: ${answer.TTL} seconds');
+    print('Data: ${answer.data}');
+  }
+} else if (record.isNxDomain) {
+  print('Domain does not exist');
+} else if (record.isServerFailure) {
+  print('Server failure');
+}
+
+dns.close();
+```
+
+## API Reference
+
+### DnsOverHttps
+
+**Constructors:**
+
+| Constructor | Description |
+|-------------|-------------|
+| `DnsOverHttps(url, {timeout, maximalPrivacy})` | Custom DoH endpoint |
+| `DnsOverHttps.google({timeout})` | Google DNS (dns.google) |
+| `DnsOverHttps.cloudflare({timeout})` | Cloudflare DNS (1.1.1.1) |
+
+**Methods:**
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `lookup(hostname)` | `Future<List<InternetAddress>>` | Resolve hostname to IP addresses |
+| `lookupDataByRRType(hostname, rrType)` | `Future<List<String>>` | Query specific record type |
+| `lookupHttpsByRRType(hostname, rrType)` | `Future<DnsRecord>` | Get full DNS response |
+| `close({force})` | `void` | Shutdown HTTP client |
+
+### Supported Record Types (RRType)
+
+| Type | Constant | Value | Description |
+|------|----------|-------|-------------|
+| A | `RRType.AType` | 1 | IPv4 address |
+| NS | `RRType.NSType` | 2 | Name server |
+| CNAME | `RRType.CNAMEType` | 5 | Canonical name (alias) |
+| SOA | `RRType.SOAType` | 6 | Start of authority |
+| PTR | `RRType.PTRType` | 12 | Reverse DNS pointer |
+| MX | `RRType.MXType` | 15 | Mail exchanger |
+| TXT | `RRType.TXTType` | 16 | Text record |
+| AAAA | `RRType.AAAAType` | 28 | IPv6 address |
+| SRV | `RRType.SRVType` | 33 | Service location |
+
+**Custom record types:**
+
+```dart
+// CAA record (type 257)
+final caaType = RRType('CAA', 257);
+final caaRecords = await dns.lookupDataByRRType('example.com', caaType);
+```
+
+### Response Classes
+
+**DnsRecord:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `status` | `int` | DNS response code |
+| `answer` | `List<Answer>?` | DNS answers |
+| `isSuccess` | `bool` | True if status == 0 |
+| `isFailure` | `bool` | True if status != 0 |
+| `isNxDomain` | `bool` | True if status == 3 |
+| `isServerFailure` | `bool` | True if status == 2 |
+
+**Answer:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `name` | `String` | Domain name |
+| `type` | `int` | Record type code |
+| `TTL` | `int` | Time to live (seconds) |
+| `data` | `String` | Record data |
+
+### Exceptions
+
+**DnsLookupException** - Thrown when DNS query fails:
+- `hostname` - The queried hostname
+- `status` - DNS status code (2=SERVFAIL, 3=NXDOMAIN, etc.)
+- `message` - Error description
+
+**DnsHttpException** - Thrown when HTTP request fails:
+- `statusCode` - HTTP status code
+- `message` - Error description
+
+## Requirements
+
+- Dart SDK: `>=3.7.0 <4.0.0`
+
+## License
+
+See [LICENSE](LICENSE) file.
+
+## Contributing
+
+Please file feature requests and bugs at the [issue tracker](https://github.com/dietfriends/dns_client/issues).
