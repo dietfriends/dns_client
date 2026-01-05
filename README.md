@@ -189,61 +189,61 @@ dns.close();
 
 **Constructors:**
 
-| Constructor | Description |
-|-------------|-------------|
-| `DnsOverHttps(url, {timeout, maximalPrivacy})` | Custom DoH endpoint |
-| `DnsOverHttps.google({timeout})` | Google DNS (dns.google) |
-| `DnsOverHttps.cloudflare({timeout})` | Cloudflare DNS (1.1.1.1) |
+| Constructor                                    | Description              |
+| ---------------------------------------------- | ------------------------ |
+| `DnsOverHttps(url, {timeout, maximalPrivacy})` | Custom DoH endpoint      |
+| `DnsOverHttps.google({timeout})`               | Google DNS (dns.google)  |
+| `DnsOverHttps.cloudflare({timeout})`           | Cloudflare DNS (1.1.1.1) |
 
 **Methods:**
 
-| Method | Returns | Description |
-|--------|---------|-------------|
-| `lookup(hostname)` | `Future<List<InternetAddress>>` | Resolve hostname to IP addresses |
-| `lookupDataByRRType(hostname, rrType)` | `Future<List<String>>` | Query specific record type |
-| `lookupHttpsByRRType(hostname, rrType)` | `Future<DnsRecord>` | Get full DNS response |
-| `close({force})` | `void` | Shutdown HTTP client |
+| Method                                  | Returns                         | Description                      |
+| --------------------------------------- | ------------------------------- | -------------------------------- |
+| `lookup(hostname)`                      | `Future<List<InternetAddress>>` | Resolve hostname to IP addresses |
+| `lookupDataByRRType(hostname, rrType)`  | `Future<List<String>>`          | Query specific record type       |
+| `lookupHttpsByRRType(hostname, rrType)` | `Future<DnsRecord>`             | Get full DNS response            |
+| `close({force})`                        | `void`                          | Shutdown HTTP client             |
 
 ### Supported Record Types (RRType)
 
-| Type | Constant | Value | Description |
-|------|----------|-------|-------------|
-| A | `RRType.A` | 1 | IPv4 address |
-| NS | `RRType.NS` | 2 | Name server |
-| CNAME | `RRType.CNAME` | 5 | Canonical name (alias) |
-| SOA | `RRType.SOA` | 6 | Start of authority |
-| PTR | `RRType.PTR` | 12 | Reverse DNS pointer |
-| HINFO | `RRType.HINFO` | 13 | Host information |
-| MX | `RRType.MX` | 15 | Mail exchanger |
-| TXT | `RRType.TXT` | 16 | Text record |
-| RP | `RRType.RP` | 17 | Responsible person |
-| AFSDB | `RRType.AFSDB` | 18 | AFS database |
-| KEY | `RRType.KEY` | 25 | Security key |
-| AAAA | `RRType.AAAA` | 28 | IPv6 address |
-| LOC | `RRType.LOC` | 29 | Geographic location |
-| SRV | `RRType.SRV` | 33 | Service location |
-| NAPTR | `RRType.NAPTR` | 35 | Naming authority pointer |
-| KX | `RRType.KX` | 36 | Key exchanger |
-| CERT | `RRType.CERT` | 37 | Certificate |
-| APL | `RRType.APL` | 42 | Address prefix list |
-| DS | `RRType.DS` | 43 | Delegation signer (DNSSEC) |
-| IPSECKEY | `RRType.IPSECKEY` | 45 | IPsec key |
-| NSEC | `RRType.NSEC` | 47 | Next secure (DNSSEC) |
-| DNSKEY | `RRType.DNSKEY` | 48 | DNS key (DNSSEC) |
-| DHCID | `RRType.DHCID` | 49 | DHCP identifier |
-| NSEC3 | `RRType.NSEC3` | 50 | Hashed denial (DNSSEC) |
-| NSEC3PARAM | `RRType.NSEC3PARAM` | 51 | NSEC3 parameters |
-| SMIMEA | `RRType.SMIMEA` | 53 | S/MIME certificate |
-| HIP | `RRType.HIP` | 55 | Host identity protocol |
-| CDS | `RRType.CDS` | 59 | Child DS (DNSSEC) |
-| SVCB | `RRType.SVCB` | 64 | Service binding |
-| HTTPS | `RRType.HTTPS` | 65 | HTTPS binding |
-| EUI48 | `RRType.EUI48` | 108 | MAC address (48-bit) |
-| EUI64 | `RRType.EUI64` | 109 | MAC address (64-bit) |
-| URI | `RRType.URI` | 256 | URI mapping |
-| CAA | `RRType.CAA` | 257 | CA authorization |
-| TA | `RRType.TA` | 32768 | Trust anchor |
-| DLV | `RRType.DLV` | 32769 | DNSSEC lookaside |
+| Type       | Constant            | Value | Description                |
+| ---------- | ------------------- | ----- | -------------------------- |
+| A          | `RRType.A`          | 1     | IPv4 address               |
+| NS         | `RRType.NS`         | 2     | Name server                |
+| CNAME      | `RRType.CNAME`      | 5     | Canonical name (alias)     |
+| SOA        | `RRType.SOA`        | 6     | Start of authority         |
+| PTR        | `RRType.PTR`        | 12    | Reverse DNS pointer        |
+| HINFO      | `RRType.HINFO`      | 13    | Host information           |
+| MX         | `RRType.MX`         | 15    | Mail exchanger             |
+| TXT        | `RRType.TXT`        | 16    | Text record                |
+| RP         | `RRType.RP`         | 17    | Responsible person         |
+| AFSDB      | `RRType.AFSDB`      | 18    | AFS database               |
+| KEY        | `RRType.KEY`        | 25    | Security key               |
+| AAAA       | `RRType.AAAA`       | 28    | IPv6 address               |
+| LOC        | `RRType.LOC`        | 29    | Geographic location        |
+| SRV        | `RRType.SRV`        | 33    | Service location           |
+| NAPTR      | `RRType.NAPTR`      | 35    | Naming authority pointer   |
+| KX         | `RRType.KX`         | 36    | Key exchanger              |
+| CERT       | `RRType.CERT`       | 37    | Certificate                |
+| APL        | `RRType.APL`        | 42    | Address prefix list        |
+| DS         | `RRType.DS`         | 43    | Delegation signer (DNSSEC) |
+| IPSECKEY   | `RRType.IPSECKEY`   | 45    | IPsec key                  |
+| NSEC       | `RRType.NSEC`       | 47    | Next secure (DNSSEC)       |
+| DNSKEY     | `RRType.DNSKEY`     | 48    | DNS key (DNSSEC)           |
+| DHCID      | `RRType.DHCID`      | 49    | DHCP identifier            |
+| NSEC3      | `RRType.NSEC3`      | 50    | Hashed denial (DNSSEC)     |
+| NSEC3PARAM | `RRType.NSEC3PARAM` | 51    | NSEC3 parameters           |
+| SMIMEA     | `RRType.SMIMEA`     | 53    | S/MIME certificate         |
+| HIP        | `RRType.HIP`        | 55    | Host identity protocol     |
+| CDS        | `RRType.CDS`        | 59    | Child DS (DNSSEC)          |
+| SVCB       | `RRType.SVCB`       | 64    | Service binding            |
+| HTTPS      | `RRType.HTTPS`      | 65    | HTTPS binding              |
+| EUI48      | `RRType.EUI48`      | 108   | MAC address (48-bit)       |
+| EUI64      | `RRType.EUI64`      | 109   | MAC address (64-bit)       |
+| URI        | `RRType.URI`        | 256   | URI mapping                |
+| CAA        | `RRType.CAA`        | 257   | CA authorization           |
+| TA         | `RRType.TA`         | 32768 | Trust anchor               |
+| DLV        | `RRType.DLV`        | 32769 | DNSSEC lookaside           |
 
 **Custom record types:**
 
@@ -257,32 +257,34 @@ final tlsaRecords = await dns.lookupDataByRRType('example.com', tlsaType);
 
 **DnsRecord:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `status` | `int` | DNS response code |
-| `answer` | `List<Answer>?` | DNS answers |
-| `isSuccess` | `bool` | True if status == 0 |
-| `isFailure` | `bool` | True if status != 0 |
-| `isNxDomain` | `bool` | True if status == 3 |
-| `isServerFailure` | `bool` | True if status == 2 |
+| Property          | Type            | Description         |
+| ----------------- | --------------- | ------------------- |
+| `status`          | `int`           | DNS response code   |
+| `answer`          | `List<Answer>?` | DNS answers         |
+| `isSuccess`       | `bool`          | True if status == 0 |
+| `isFailure`       | `bool`          | True if status != 0 |
+| `isNxDomain`      | `bool`          | True if status == 3 |
+| `isServerFailure` | `bool`          | True if status == 2 |
 
 **Answer:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `name` | `String` | Domain name |
-| `type` | `int` | Record type code |
-| `TTL` | `int` | Time to live (seconds) |
-| `data` | `String` | Record data |
+| Property | Type     | Description            |
+| -------- | -------- | ---------------------- |
+| `name`   | `String` | Domain name            |
+| `type`   | `int`    | Record type code       |
+| `TTL`    | `int`    | Time to live (seconds) |
+| `data`   | `String` | Record data            |
 
 ### Exceptions
 
 **DnsLookupException** - Thrown when DNS query fails:
+
 - `hostname` - The queried hostname
 - `status` - DNS status code (2=SERVFAIL, 3=NXDOMAIN, etc.)
 - `message` - Error description
 
 **DnsHttpException** - Thrown when HTTP request fails:
+
 - `statusCode` - HTTP status code
 - `message` - Error description
 
