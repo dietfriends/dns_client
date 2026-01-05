@@ -1,5 +1,4 @@
 import 'package:dns_client/dns_client.dart';
-import 'package:dns_client/src/rr_type.dart';
 
 void main() async {
   final dns = DnsOverHttps.google();
