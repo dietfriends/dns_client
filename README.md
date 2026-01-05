@@ -11,7 +11,7 @@ Dart implementation of DNS-over-HTTPS (DoH).
 ## Features
 
 - **Multiple DNS Providers** - Google DNS, Cloudflare DNS, or custom DoH endpoints
-- **All DNS Record Types** - A, AAAA, MX, TXT, SRV, NS, CNAME, PTR, SOA, and custom types
+- **36 DNS Record Types** - A, AAAA, MX, TXT, SRV, CAA, HTTPS, SVCB, DNSKEY, DS, and more
 - **Privacy Protection** - Hide client IP from authoritative nameservers
 - **Error Handling** - Detailed exceptions for DNS and HTTP failures
 - **Dart 3 Support** - Requires Dart SDK 3.7.0+
@@ -70,23 +70,27 @@ dns.close();
 final dns = DnsOverHttps.google();
 
 // MX records (mail servers)
-final mxRecords = await dns.lookupDataByRRType('example.com', RRType.MXType);
+final mxRecords = await dns.lookupDataByRRType('example.com', RRType.MX);
 print('Mail servers: $mxRecords');
 
 // TXT records (SPF, DKIM, domain verification)
-final txtRecords = await dns.lookupDataByRRType('example.com', RRType.TXTType);
+final txtRecords = await dns.lookupDataByRRType('example.com', RRType.TXT);
 print('TXT records: $txtRecords');
 
 // SRV records (service discovery)
 final srvRecords = await dns.lookupDataByRRType(
   '_jmap._tcp.fastmail.com',
-  RRType.SRVType,
+  RRType.SRV,
 );
 print('SRV records: $srvRecords');
 
-// AAAA records (IPv6)
-final ipv6Records = await dns.lookupDataByRRType('example.com', RRType.AAAAType);
-print('IPv6 addresses: $ipv6Records');
+// CAA records (certificate authority authorization)
+final caaRecords = await dns.lookupDataByRRType('example.com', RRType.CAA);
+print('CAA records: $caaRecords');
+
+// HTTPS records (service binding)
+final httpsRecords = await dns.lookupDataByRRType('example.com', RRType.HTTPS);
+print('HTTPS records: $httpsRecords');
 
 dns.close();
 ```
@@ -136,7 +140,7 @@ final dns = DnsOverHttps.google();
 try {
   final records = await dns.lookupDataByRRType(
     'nonexistent.invalid',
-    RRType.AType,
+    RRType.A,
   );
 } on DnsLookupException catch (e) {
   // DNS-level error (NXDOMAIN, SERVFAIL, etc.)
@@ -159,7 +163,7 @@ Access the complete DNS response for detailed information:
 ```dart
 final dns = DnsOverHttps.google();
 
-final record = await dns.lookupHttpsByRRType('example.com', RRType.MXType);
+final record = await dns.lookupHttpsByRRType('example.com', RRType.MX);
 
 if (record.isSuccess) {
   print('Status: ${record.status}');  // 0 = NOERROR
@@ -204,22 +208,49 @@ dns.close();
 
 | Type | Constant | Value | Description |
 |------|----------|-------|-------------|
-| A | `RRType.AType` | 1 | IPv4 address |
-| NS | `RRType.NSType` | 2 | Name server |
-| CNAME | `RRType.CNAMEType` | 5 | Canonical name (alias) |
-| SOA | `RRType.SOAType` | 6 | Start of authority |
-| PTR | `RRType.PTRType` | 12 | Reverse DNS pointer |
-| MX | `RRType.MXType` | 15 | Mail exchanger |
-| TXT | `RRType.TXTType` | 16 | Text record |
-| AAAA | `RRType.AAAAType` | 28 | IPv6 address |
-| SRV | `RRType.SRVType` | 33 | Service location |
+| A | `RRType.A` | 1 | IPv4 address |
+| NS | `RRType.NS` | 2 | Name server |
+| CNAME | `RRType.CNAME` | 5 | Canonical name (alias) |
+| SOA | `RRType.SOA` | 6 | Start of authority |
+| PTR | `RRType.PTR` | 12 | Reverse DNS pointer |
+| HINFO | `RRType.HINFO` | 13 | Host information |
+| MX | `RRType.MX` | 15 | Mail exchanger |
+| TXT | `RRType.TXT` | 16 | Text record |
+| RP | `RRType.RP` | 17 | Responsible person |
+| AFSDB | `RRType.AFSDB` | 18 | AFS database |
+| KEY | `RRType.KEY` | 25 | Security key |
+| AAAA | `RRType.AAAA` | 28 | IPv6 address |
+| LOC | `RRType.LOC` | 29 | Geographic location |
+| SRV | `RRType.SRV` | 33 | Service location |
+| NAPTR | `RRType.NAPTR` | 35 | Naming authority pointer |
+| KX | `RRType.KX` | 36 | Key exchanger |
+| CERT | `RRType.CERT` | 37 | Certificate |
+| APL | `RRType.APL` | 42 | Address prefix list |
+| DS | `RRType.DS` | 43 | Delegation signer (DNSSEC) |
+| IPSECKEY | `RRType.IPSECKEY` | 45 | IPsec key |
+| NSEC | `RRType.NSEC` | 47 | Next secure (DNSSEC) |
+| DNSKEY | `RRType.DNSKEY` | 48 | DNS key (DNSSEC) |
+| DHCID | `RRType.DHCID` | 49 | DHCP identifier |
+| NSEC3 | `RRType.NSEC3` | 50 | Hashed denial (DNSSEC) |
+| NSEC3PARAM | `RRType.NSEC3PARAM` | 51 | NSEC3 parameters |
+| SMIMEA | `RRType.SMIMEA` | 53 | S/MIME certificate |
+| HIP | `RRType.HIP` | 55 | Host identity protocol |
+| CDS | `RRType.CDS` | 59 | Child DS (DNSSEC) |
+| SVCB | `RRType.SVCB` | 64 | Service binding |
+| HTTPS | `RRType.HTTPS` | 65 | HTTPS binding |
+| EUI48 | `RRType.EUI48` | 108 | MAC address (48-bit) |
+| EUI64 | `RRType.EUI64` | 109 | MAC address (64-bit) |
+| URI | `RRType.URI` | 256 | URI mapping |
+| CAA | `RRType.CAA` | 257 | CA authorization |
+| TA | `RRType.TA` | 32768 | Trust anchor |
+| DLV | `RRType.DLV` | 32769 | DNSSEC lookaside |
 
 **Custom record types:**
 
 ```dart
-// CAA record (type 257)
-final caaType = RRType('CAA', 257);
-final caaRecords = await dns.lookupDataByRRType('example.com', caaType);
+// TLSA record (type 52)
+final tlsaType = RRType('TLSA', 52);
+final tlsaRecords = await dns.lookupDataByRRType('example.com', tlsaType);
 ```
 
 ### Response Classes
