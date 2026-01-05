@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dns_client/dns_client.dart';
-
-import 'dns_record.dart';
+import 'package:dns_client/src/rr_type.dart';
 
 class DnsOverHttps extends DnsClient {
   final _client = HttpClient();
@@ -36,10 +35,12 @@ class DnsOverHttps extends DnsClient {
     _client.close(force: force);
   }
 
+  /// [Google DNS-over-HTTPS documentation](https://developers.google.com/speed/public-dns/docs/dns-over-https)
   factory DnsOverHttps.google({Duration? timeout}) {
-    return DnsOverHttps('https://dns.google.com/resolve', timeout: timeout);
+    return DnsOverHttps('https://dns.google/resolve', timeout: timeout);
   }
 
+  /// [Cloudflare DNS-over-HTTPS documentation](https://developers.cloudflare.com/1.1.1.1/dns-over-https/json-format/)
   factory DnsOverHttps.cloudflare({Duration? timeout}) {
     return DnsOverHttps('https://cloudflare-dns.com/dns-query',
         timeout: timeout);
@@ -81,5 +82,79 @@ class DnsOverHttps extends DnsClient {
     }
     final record = DnsRecord.fromJson(jsonDecode(contents.toString()));
     return record;
+  }
+
+  /// Performs a DNS-over-HTTPS query for the specified [hostname] and [rrType].
+  ///
+  /// Returns the full [DnsRecord] response from the DNS server.
+  ///
+  /// Throws [DnsHttpException] if the HTTP request fails (non-200 status).
+  Future<DnsRecord> lookupHttpsByRRType(String hostname, RRType rrType) async {
+    // Build URL
+    var query = {
+      'name': hostname,
+      'type': '${rrType.value}',
+    };
+
+    // Hide my IP?
+    if (maximalPrivacy) {
+      query['edns_client_subnet'] = '0.0.0.0/0';
+    }
+    final request =
+        await _client.getUrl(Uri.https(_uri.authority, _uri.path, query));
+    request.headers.set('accept', 'application/dns-json');
+    final response = await request.close();
+
+    // Validate HTTP response status
+    if (response.statusCode != 200) {
+      await response.drain<void>();
+      throw DnsHttpException(
+        'DNS-over-HTTPS request failed',
+        statusCode: response.statusCode,
+      );
+    }
+
+    final contents = StringBuffer();
+    await for (var data in response.transform(utf8.decoder)) {
+      contents.write(data);
+    }
+    final record = DnsRecord.fromJson(jsonDecode(contents.toString()));
+    return record;
+  }
+
+  /// Looks up DNS records for [hostname] of the specified [rrType].
+  ///
+  /// Returns a list of data strings from DNS answers matching the given
+  /// resource record type. Returns an empty list if no matching records
+  /// are found.
+  ///
+  /// Throws [DnsLookupException] if the DNS query fails (SERVFAIL, NXDOMAIN, etc.).
+  /// Throws [DnsHttpException] if the HTTP request fails.
+  ///
+  /// Example:
+  /// ```dart
+  /// final srvRecords = await client.lookupDataByRRType(
+  ///   '_jmap._tcp.example.com',
+  ///   RRType.SRVType,
+  /// );
+  /// ```
+  @override
+  Future<List<String>> lookupDataByRRType(String hostname, RRType rrType) async {
+    final record = await lookupHttpsByRRType(hostname, rrType);
+
+    // Check for DNS-level errors
+    if (record.isFailure) {
+      throw DnsLookupException(
+        'DNS lookup failed for $hostname',
+        hostname: hostname,
+        status: record.status,
+      );
+    }
+
+    return record.answer
+            ?.where((answer) => answer.type == rrType.value)
+            .map((answer) => answer.data)
+            .toList() ??
+        [];
   }
 }
