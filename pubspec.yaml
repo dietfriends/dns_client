@@ -4,7 +4,7 @@ version: 1.0.0-dev.1
 homepage: https://github.com/dietfriends/dns_client
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.7.0 <4.0.0'
 
 dependencies:
   http: ^1.2.0
@@ -13,7 +13,7 @@ dependencies:
   equatable: ^2.0.5
 
 dev_dependencies:
-  lints: ^6.0.0
+  lints: ^5.0.0
   test: ^1.25.0
   json_serializable: ^6.8.0
   build_runner: ^2.4.0

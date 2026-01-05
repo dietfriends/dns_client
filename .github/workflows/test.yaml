@@ -13,7 +13,7 @@ jobs:
   build:
     strategy:
       matrix:
-        sdk: [3.0.0, 3.2.0, stable]
+        sdk: [3.7.0, stable]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
