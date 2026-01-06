@@ -106,6 +106,33 @@ class DnsOverHttpsWire extends DnsClient {
     );
   }
 
+  // ========== OpenDNS Factory Constructors ==========
+
+  /// OpenDNS standard DNS-over-HTTPS.
+  ///
+  /// Enterprise-grade DNS service owned by Cisco.
+  ///
+  /// [OpenDNS documentation](https://support.opendns.com/hc/en-us/articles/360038086532)
+  factory DnsOverHttpsWire.opendns({Duration? timeout}) {
+    return DnsOverHttpsWire(
+      'https://doh.opendns.com/dns-query',
+      timeout: timeout,
+    );
+  }
+
+  /// OpenDNS FamilyShield with automatic adult content blocking.
+  ///
+  /// Pre-configured to block adult content - no account required.
+  /// Ideal for family networks and parental controls.
+  ///
+  /// [OpenDNS FamilyShield documentation](https://www.opendns.com/setupguide/#familyshield)
+  factory DnsOverHttpsWire.opendnsFamilyShield({Duration? timeout}) {
+    return DnsOverHttpsWire(
+      'https://doh.familyshield.opendns.com/dns-query',
+      timeout: timeout,
+    );
+  }
+
   // ========== DnsClient Interface Implementation ==========
 
   @override

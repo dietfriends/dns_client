@@ -14,6 +14,7 @@ This document outlines planned DNS-over-HTTPS (DoH) providers to be added to the
 ### Wire Format (DnsOverHttpsWire)
 
 - **Quad9** - `DnsOverHttpsWire.quad9()`, `quad9Ecs()`, `quad9Unsecured()`
+- **OpenDNS** - `DnsOverHttpsWire.opendns()`, `opendnsFamilyShield()`
 
 ## Planned Providers
 
@@ -22,16 +23,16 @@ This document outlines planned DNS-over-HTTPS (DoH) providers to be added to the
 | Provider      | Endpoint                                           | Variants                | Notes                            | Status |
 | ------------- | -------------------------------------------------- | ----------------------- | -------------------------------- | ------ |
 | NextDNS       | `https://dns.nextdns.io/dns-query`                 | Anycast                 | Privacy-focused, browser default | Done   |
-| OpenDNS       | `https://doh.opendns.com/dns-query`                | FamilyShield            | Cisco-owned, enterprise-grade    |        |
 | CleanBrowsing | `https://doh.cleanbrowsing.org/doh/family-filter/` | Family, Adult, Security | Content filtering                |        |
 | DNS.SB        | `https://doh.dns.sb/dns-query`                     | -                       | Privacy-focused, no logging      |        |
 
 ### Phase 2: Wire Format Providers
 
-| Provider | Endpoint                            | Variants          | Notes                         |
-| -------- | ----------------------------------- | ----------------- | ----------------------------- |
-| Mullvad  | `https://dns.mullvad.net/dns-query` | adblock, extended | VPN provider, strong privacy  |
-| ControlD | `https://freedns.controld.com/p0`   | p0, p1, p2        | Configurable filtering levels |
+| Provider | Endpoint                            | Variants          | Notes                         | Status |
+| -------- | ----------------------------------- | ----------------- | ----------------------------- | ------ |
+| OpenDNS  | `https://doh.opendns.com/dns-query` | FamilyShield      | Cisco-owned, enterprise-grade | Done   |
+| Mullvad  | `https://dns.mullvad.net/dns-query` | adblock, extended | VPN provider, strong privacy  |        |
+| ControlD | `https://freedns.controld.com/p0`   | p0, p1, p2        | Configurable filtering levels |        |
 
 ## Implementation Notes
 

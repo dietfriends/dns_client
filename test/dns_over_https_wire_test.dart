@@ -85,6 +85,47 @@ void main() {
       });
     });
 
+    group('OpenDNS', () {
+      late DnsOverHttpsWire client;
+
+      setUp(() {
+        client = DnsOverHttpsWire.opendns();
+      });
+
+      tearDown(() {
+        client.close();
+      });
+
+      test('lookup returns IP addresses', () async {
+        final addresses = await client.lookup('google.com');
+        expect(addresses, isNotEmpty);
+        expect(addresses.first.address, isNotEmpty);
+      });
+
+      test('lookupWire returns DnsRecord', () async {
+        final record = await client.lookupWire('example.com', RRType.A);
+        expect(record.isSuccess, isTrue);
+        expect(record.answer, isNotNull);
+      });
+    });
+
+    group('OpenDNS FamilyShield', () {
+      late DnsOverHttpsWire client;
+
+      setUp(() {
+        client = DnsOverHttpsWire.opendnsFamilyShield();
+      });
+
+      tearDown(() {
+        client.close();
+      });
+
+      test('lookup returns IP addresses', () async {
+        final addresses = await client.lookup('google.com');
+        expect(addresses, isNotEmpty);
+      });
+    });
+
     group('client lifecycle', () {
       test('close prevents further lookups', () async {
         final client = DnsOverHttpsWire.quad9();
