@@ -10,7 +10,7 @@ Dart implementation of DNS-over-HTTPS (DoH).
 
 ## Features
 
-- **Multiple DNS Providers** - Google DNS, Cloudflare DNS, AdGuard DNS, Quad9, or custom DoH endpoints
+- **Multiple DNS Providers** - Google, Cloudflare, AdGuard, NextDNS, Quad9, OpenDNS, or custom DoH endpoints
 - **Wire Format Support** - RFC 1035/8484 compliant DNS wire format with HTTP/2 for Quad9
 - **36 DNS Record Types** - A, AAAA, MX, TXT, SRV, CAA, HTTPS, SVCB, DNSKEY, DS, and more
 - **Privacy Protection** - Hide client IP from authoritative nameservers
@@ -91,6 +91,26 @@ dns.close();
 
 // Using Quad9 DNS (no filtering)
 final dns = DnsOverHttpsWire.quad9Unsecured();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Using NextDNS
+final dns = DnsOverHttps.nextdns();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Using NextDNS with custom configuration
+final dns = DnsOverHttps.nextdns(configId: 'abc123');
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Using OpenDNS
+final dns = DnsOverHttpsWire.opendns();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Using OpenDNS FamilyShield (blocks adult content)
+final dns = DnsOverHttpsWire.opendnsFamilyShield();
 final addresses = await dns.lookup('example.com');
 dns.close();
 ```
@@ -220,14 +240,16 @@ dns.close();
 
 **Constructors:**
 
-| Constructor                                    | Description                       |
-| ---------------------------------------------- | --------------------------------- |
-| `DnsOverHttps(url, {timeout, maximalPrivacy})` | Custom DoH endpoint               |
-| `DnsOverHttps.google({timeout})`               | Google DNS (dns.google)           |
-| `DnsOverHttps.cloudflare({timeout})`           | Cloudflare DNS (1.1.1.1)          |
-| `DnsOverHttps.adguard({timeout})`              | AdGuard DNS (blocks ads/trackers) |
-| `DnsOverHttps.adguardNonFiltering({timeout})`  | AdGuard DNS (no filtering)        |
-| `DnsOverHttps.adguardFamily({timeout})`        | AdGuard DNS (family protection)   |
+| Constructor                                        | Description                       |
+| -------------------------------------------------- | --------------------------------- |
+| `DnsOverHttps(url, {timeout, maximalPrivacy})`     | Custom DoH endpoint               |
+| `DnsOverHttps.google({timeout})`                   | Google DNS (dns.google)           |
+| `DnsOverHttps.cloudflare({timeout})`               | Cloudflare DNS (1.1.1.1)          |
+| `DnsOverHttps.adguard({timeout})`                  | AdGuard DNS (blocks ads/trackers) |
+| `DnsOverHttps.adguardNonFiltering({timeout})`      | AdGuard DNS (no filtering)        |
+| `DnsOverHttps.adguardFamily({timeout})`            | AdGuard DNS (family protection)   |
+| `DnsOverHttps.nextdns({configId, timeout})`        | NextDNS (optional custom config)  |
+| `DnsOverHttps.nextdnsAnycast({configId, timeout})` | NextDNS Anycast endpoint          |
 
 **Methods:**
 
@@ -240,16 +262,18 @@ dns.close();
 
 ### DnsOverHttpsWire
 
-Wire format DoH client using HTTP/2 (RFC 1035/8484). Required for Quad9.
+Wire format DoH client using HTTP/2 (RFC 1035/8484). Required for Quad9 and OpenDNS.
 
 **Constructors:**
 
-| Constructor                                  | Description                           |
-| -------------------------------------------- | ------------------------------------- |
-| `DnsOverHttpsWire(url, {timeout})`           | Custom wire format DoH endpoint       |
-| `DnsOverHttpsWire.quad9({timeout})`          | Quad9 DNS (malware blocking + DNSSEC) |
-| `DnsOverHttpsWire.quad9Ecs({timeout})`       | Quad9 DNS with EDNS Client Subnet     |
-| `DnsOverHttpsWire.quad9Unsecured({timeout})` | Quad9 DNS (no filtering)              |
+| Constructor                                       | Description                           |
+| ------------------------------------------------- | ------------------------------------- |
+| `DnsOverHttpsWire(url, {timeout})`                | Custom wire format DoH endpoint       |
+| `DnsOverHttpsWire.quad9({timeout})`               | Quad9 DNS (malware blocking + DNSSEC) |
+| `DnsOverHttpsWire.quad9Ecs({timeout})`            | Quad9 DNS with EDNS Client Subnet     |
+| `DnsOverHttpsWire.quad9Unsecured({timeout})`      | Quad9 DNS (no filtering)              |
+| `DnsOverHttpsWire.opendns({timeout})`             | OpenDNS (enterprise-grade)            |
+| `DnsOverHttpsWire.opendnsFamilyShield({timeout})` | OpenDNS FamilyShield (blocks adult)   |
 
 **Methods:**
 
