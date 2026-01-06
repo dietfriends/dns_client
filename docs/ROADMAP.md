@@ -9,6 +9,7 @@ This document outlines planned DNS-over-HTTPS (DoH) providers to be added to the
 - **Google** - `DnsOverHttps.google()`
 - **Cloudflare** - `DnsOverHttps.cloudflare()`
 - **AdGuard** - `DnsOverHttps.adguard()`, `adguardNonFiltering()`, `adguardFamily()`
+- **NextDNS** - `DnsOverHttps.nextdns()`, `nextdnsAnycast()` (supports optional `configId`)
 
 ### Wire Format (DnsOverHttpsWire)
 
@@ -18,12 +19,12 @@ This document outlines planned DNS-over-HTTPS (DoH) providers to be added to the
 
 ### Phase 1: JSON-based Providers
 
-| Provider      | Endpoint                                           | Variants                | Notes                            |
-| ------------- | -------------------------------------------------- | ----------------------- | -------------------------------- |
-| NextDNS       | `https://dns.nextdns.io/dns-query`                 | Anycast                 | Privacy-focused, browser default |
-| OpenDNS       | `https://doh.opendns.com/dns-query`                | FamilyShield            | Cisco-owned, enterprise-grade    |
-| CleanBrowsing | `https://doh.cleanbrowsing.org/doh/family-filter/` | Family, Adult, Security | Content filtering                |
-| DNS.SB        | `https://doh.dns.sb/dns-query`                     | -                       | Privacy-focused, no logging      |
+| Provider      | Endpoint                                           | Variants                | Notes                            | Status |
+| ------------- | -------------------------------------------------- | ----------------------- | -------------------------------- | ------ |
+| NextDNS       | `https://dns.nextdns.io/dns-query`                 | Anycast                 | Privacy-focused, browser default | Done   |
+| OpenDNS       | `https://doh.opendns.com/dns-query`                | FamilyShield            | Cisco-owned, enterprise-grade    |        |
+| CleanBrowsing | `https://doh.cleanbrowsing.org/doh/family-filter/` | Family, Adult, Security | Content filtering                |        |
+| DNS.SB        | `https://doh.dns.sb/dns-query`                     | -                       | Privacy-focused, no logging      |        |
 
 ### Phase 2: Wire Format Providers
 
