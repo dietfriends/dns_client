@@ -1,0 +1,23 @@
+# Files to exclude from published package
+
+# IDE files
+.idea/
+.claude/
+.github/
+.husky/
+.please/
+
+# Documentation (internal)
+docs/
+
+# Development files
+CLAUDE.md
+specs/
+.release-please-manifest.json
+release-please-config.json
+
+# Node.js (used for pre-commit hooks)
+node_modules/
+package.json
+package-lock.json
+dprint.json

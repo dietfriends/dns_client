@@ -126,3 +126,4 @@ node_modules/
 
 # IDE config files (ignore entire .idea directory)
 .idea/
+!.idea/.gitignore
