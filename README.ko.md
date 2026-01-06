@@ -10,7 +10,7 @@ Dart로 구현한 DNS-over-HTTPS (DoH) 라이브러리입니다.
 
 ## 주요 기능
 
-- **다양한 DNS 제공자** - Google DNS, Cloudflare DNS, AdGuard DNS, Quad9 또는 사용자 정의 DoH 엔드포인트 지원
+- **다양한 DNS 제공자** - Google, Cloudflare, AdGuard, NextDNS, Quad9, OpenDNS 또는 사용자 정의 DoH 엔드포인트 지원
 - **와이어 포맷 지원** - Quad9용 HTTP/2 기반 RFC 1035/8484 호환 DNS 와이어 포맷
 - **36개 DNS 레코드 타입** - A, AAAA, MX, TXT, SRV, CAA, HTTPS, SVCB, DNSKEY, DS 등
 - **개인정보 보호** - 권한 있는 네임서버로부터 클라이언트 IP 숨김
@@ -81,6 +81,26 @@ dns.close();
 
 // Quad9 DNS 사용 (필터링 없음)
 final dns = DnsOverHttpsWire.quad9Unsecured();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// NextDNS 사용
+final dns = DnsOverHttps.nextdns();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// NextDNS 사용 (사용자 정의 설정)
+final dns = DnsOverHttps.nextdns(configId: 'abc123');
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// OpenDNS 사용
+final dns = DnsOverHttpsWire.opendns();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// OpenDNS FamilyShield 사용 (성인 콘텐츠 차단)
+final dns = DnsOverHttpsWire.opendnsFamilyShield();
 final addresses = await dns.lookup('example.com');
 dns.close();
 ```
@@ -210,14 +230,16 @@ dns.close();
 
 **생성자:**
 
-| 생성자                                         | 설명                           |
-| ---------------------------------------------- | ------------------------------ |
-| `DnsOverHttps(url, {timeout, maximalPrivacy})` | 사용자 정의 DoH 엔드포인트     |
-| `DnsOverHttps.google({timeout})`               | Google DNS (dns.google)        |
-| `DnsOverHttps.cloudflare({timeout})`           | Cloudflare DNS (1.1.1.1)       |
-| `DnsOverHttps.adguard({timeout})`              | AdGuard DNS (광고/추적기 차단) |
-| `DnsOverHttps.adguardNonFiltering({timeout})`  | AdGuard DNS (필터링 없음)      |
-| `DnsOverHttps.adguardFamily({timeout})`        | AdGuard DNS (가족 보호)        |
+| 생성자                                             | 설명                            |
+| -------------------------------------------------- | ------------------------------- |
+| `DnsOverHttps(url, {timeout, maximalPrivacy})`     | 사용자 정의 DoH 엔드포인트      |
+| `DnsOverHttps.google({timeout})`                   | Google DNS (dns.google)         |
+| `DnsOverHttps.cloudflare({timeout})`               | Cloudflare DNS (1.1.1.1)        |
+| `DnsOverHttps.adguard({timeout})`                  | AdGuard DNS (광고/추적기 차단)  |
+| `DnsOverHttps.adguardNonFiltering({timeout})`      | AdGuard DNS (필터링 없음)       |
+| `DnsOverHttps.adguardFamily({timeout})`            | AdGuard DNS (가족 보호)         |
+| `DnsOverHttps.nextdns({configId, timeout})`        | NextDNS (사용자 정의 설정 가능) |
+| `DnsOverHttps.nextdnsAnycast({configId, timeout})` | NextDNS Anycast 엔드포인트      |
 
 **메서드:**
 
@@ -230,16 +252,18 @@ dns.close();
 
 ### DnsOverHttpsWire
 
-HTTP/2 기반 와이어 포맷 DoH 클라이언트 (RFC 1035/8484). Quad9에 필요합니다.
+HTTP/2 기반 와이어 포맷 DoH 클라이언트 (RFC 1035/8484). Quad9 및 OpenDNS에 필요합니다.
 
 **생성자:**
 
-| 생성자                                       | 설명                               |
-| -------------------------------------------- | ---------------------------------- |
-| `DnsOverHttpsWire(url, {timeout})`           | 사용자 정의 와이어 포맷 DoH        |
-| `DnsOverHttpsWire.quad9({timeout})`          | Quad9 DNS (악성코드 차단 + DNSSEC) |
-| `DnsOverHttpsWire.quad9Ecs({timeout})`       | Quad9 DNS EDNS Client Subnet       |
-| `DnsOverHttpsWire.quad9Unsecured({timeout})` | Quad9 DNS (필터링 없음)            |
+| 생성자                                            | 설명                                    |
+| ------------------------------------------------- | --------------------------------------- |
+| `DnsOverHttpsWire(url, {timeout})`                | 사용자 정의 와이어 포맷 DoH             |
+| `DnsOverHttpsWire.quad9({timeout})`               | Quad9 DNS (악성코드 차단 + DNSSEC)      |
+| `DnsOverHttpsWire.quad9Ecs({timeout})`            | Quad9 DNS EDNS Client Subnet            |
+| `DnsOverHttpsWire.quad9Unsecured({timeout})`      | Quad9 DNS (필터링 없음)                 |
+| `DnsOverHttpsWire.opendns({timeout})`             | OpenDNS (엔터프라이즈급)                |
+| `DnsOverHttpsWire.opendnsFamilyShield({timeout})` | OpenDNS FamilyShield (성인 콘텐츠 차단) |
 
 **메서드:**
 
