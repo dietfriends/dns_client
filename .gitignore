@@ -124,9 +124,5 @@ node_modules/
 # Please.ai session memory
 .please/memory
 
-# IDE config files (user-specific)
-.idea/misc.xml
-.idea/modules.xml
-.idea/*.iml
-.idea/vcs.xml
-.idea/material_theme*.xml
+# IDE config files (ignore entire .idea directory)
+.idea/
