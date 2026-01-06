@@ -87,10 +87,11 @@ class DnsOverHttps extends DnsClient {
   ///
   /// [NextDNS documentation](https://nextdns.io/)
   factory DnsOverHttps.nextdns({String? configId, Duration? timeout}) {
+    const baseUrl = 'https://dns.nextdns.io';
     final url =
         configId != null
-            ? 'https://dns.nextdns.io/${Uri.encodeComponent(configId)}'
-            : 'https://dns.nextdns.io/dns-query';
+            ? '$baseUrl/${Uri.encodeComponent(configId)}'
+            : '$baseUrl/dns-query';
     return DnsOverHttps(url, timeout: timeout);
   }
 
@@ -102,10 +103,11 @@ class DnsOverHttps extends DnsClient {
   ///
   /// [NextDNS documentation](https://nextdns.io/)
   factory DnsOverHttps.nextdnsAnycast({String? configId, Duration? timeout}) {
+    const baseUrl = 'https://anycast.dns.nextdns.io';
     final url =
         configId != null
-            ? 'https://anycast.dns.nextdns.io/${Uri.encodeComponent(configId)}'
-            : 'https://anycast.dns.nextdns.io/dns-query';
+            ? '$baseUrl/${Uri.encodeComponent(configId)}'
+            : '$baseUrl/dns-query';
     return DnsOverHttps(url, timeout: timeout);
   }
 
