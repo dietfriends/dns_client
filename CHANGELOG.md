@@ -6,6 +6,15 @@
 - Replace deprecated pedantic with lints package
 - Update all dependencies for Dart 3 compatibility
 
+## [1.3.0](https://github.com/amondnet/dns_client/compare/v1.2.0...v1.3.0) (2026-01-06)
+
+
+### Features
+
+* add NextDNS provider support ([#27](https://github.com/amondnet/dns_client/issues/27)) ([cfd2a11](https://github.com/amondnet/dns_client/commit/cfd2a11ced78aa005898477a2a253e7740fe774f))
+* add OpenDNS provider support (wire format) ([#30](https://github.com/amondnet/dns_client/issues/30)) ([8c631dc](https://github.com/amondnet/dns_client/commit/8c631dc762c9f519aeb2f27fdca41fb96af4f1d2)), closes [#29](https://github.com/amondnet/dns_client/issues/29)
+* add remaining DoH providers from ROADMAP ([#32](https://github.com/amondnet/dns_client/issues/32)) ([6298b98](https://github.com/amondnet/dns_client/commit/6298b98421e427468322d03773ae3165701bf0cf))
+
 ## [1.2.0](https://github.com/amondnet/dns_client/compare/v1.1.0...v1.2.0) (2026-01-06)
 
 
