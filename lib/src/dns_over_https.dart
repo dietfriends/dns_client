@@ -81,14 +81,15 @@ class DnsOverHttps extends DnsClient {
   /// NextDNS DNS-over-HTTPS.
   ///
   /// [configId] is optional. When provided, uses personalized filtering
-  /// based on your NextDNS configuration. Without [configId], uses the
-  /// NextDNS public resolver.
+  /// based on your NextDNS configuration (typically a 6-character alphanumeric
+  /// ID from your NextDNS dashboard). Without [configId], uses the NextDNS
+  /// public resolver.
   ///
   /// [NextDNS documentation](https://nextdns.io/)
   factory DnsOverHttps.nextdns({String? configId, Duration? timeout}) {
     final url =
         configId != null
-            ? 'https://dns.nextdns.io/$configId'
+            ? 'https://dns.nextdns.io/${Uri.encodeComponent(configId)}'
             : 'https://dns.nextdns.io/dns-query';
     return DnsOverHttps(url, timeout: timeout);
   }
@@ -96,13 +97,14 @@ class DnsOverHttps extends DnsClient {
   /// NextDNS Anycast endpoint for optimal routing.
   ///
   /// Uses NextDNS anycast infrastructure for lower latency routing.
-  /// [configId] is optional for personalized filtering.
+  /// [configId] is optional for personalized filtering (typically a
+  /// 6-character alphanumeric ID from your NextDNS dashboard).
   ///
   /// [NextDNS documentation](https://nextdns.io/)
   factory DnsOverHttps.nextdnsAnycast({String? configId, Duration? timeout}) {
     final url =
         configId != null
-            ? 'https://anycast.dns.nextdns.io/$configId'
+            ? 'https://anycast.dns.nextdns.io/${Uri.encodeComponent(configId)}'
             : 'https://anycast.dns.nextdns.io/dns-query';
     return DnsOverHttps(url, timeout: timeout);
   }
