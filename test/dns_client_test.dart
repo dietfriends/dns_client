@@ -123,4 +123,28 @@ void main() {
       client.close();
     });
   });
+
+  group('HttpDnsClient DNS.SB', () {
+    test('lookup( google.com )', () async {
+      final client = DnsOverHttps.dnsSb();
+      final address = await client.lookup('google.com');
+      expect(address, isNotNull);
+      expect(address.isNotEmpty, isTrue);
+      client.close();
+    });
+
+    test('cname test', () async {
+      final client = DnsOverHttps.dnsSb();
+      final address = await client.lookup('api.google.com');
+      expect(address, isNotNull);
+      expect(address.isNotEmpty, isTrue);
+      client.close();
+    });
+
+    test('close', () async {
+      final client = DnsOverHttps.dnsSb();
+      client.close();
+      expect(client.lookup('google.com'), throwsA(isA<StateError>()));
+    });
+  });
 }

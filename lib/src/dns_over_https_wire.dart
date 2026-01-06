@@ -133,6 +133,128 @@ class DnsOverHttpsWire extends DnsClient {
     );
   }
 
+  // ========== CleanBrowsing Factory Constructors ==========
+
+  /// CleanBrowsing Family Filter DNS-over-HTTPS.
+  ///
+  /// Blocks access to adult content, as well as malicious and phishing domains.
+  /// Also enforces SafeSearch on Google and Bing. This is the recommended filter
+  /// for families with children.
+  ///
+  /// [CleanBrowsing documentation](https://cleanbrowsing.org/filters/)
+  factory DnsOverHttpsWire.cleanBrowsingFamily({Duration? timeout}) {
+    return DnsOverHttpsWire(
+      'https://doh.cleanbrowsing.org/doh/family-filter/',
+      timeout: timeout,
+    );
+  }
+
+  /// CleanBrowsing Adult Filter DNS-over-HTTPS.
+  ///
+  /// Blocks access to adult content only. Does not block VPNs, proxies,
+  /// or mixed content sites. Less restrictive than [cleanBrowsingFamily].
+  ///
+  /// [CleanBrowsing documentation](https://cleanbrowsing.org/filters/)
+  factory DnsOverHttpsWire.cleanBrowsingAdult({Duration? timeout}) {
+    return DnsOverHttpsWire(
+      'https://doh.cleanbrowsing.org/doh/adult-filter/',
+      timeout: timeout,
+    );
+  }
+
+  /// CleanBrowsing Security Filter DNS-over-HTTPS.
+  ///
+  /// Blocks phishing, spam, malware and malicious domains only.
+  /// Does not block adult content. Ideal for workplaces and security-focused use.
+  ///
+  /// [CleanBrowsing documentation](https://cleanbrowsing.org/filters/)
+  factory DnsOverHttpsWire.cleanBrowsingSecurity({Duration? timeout}) {
+    return DnsOverHttpsWire(
+      'https://doh.cleanbrowsing.org/doh/security-filter/',
+      timeout: timeout,
+    );
+  }
+
+  // ========== Mullvad Factory Constructors ==========
+
+  /// Mullvad DNS-over-HTTPS resolver.
+  ///
+  /// Privacy-focused DNS from the VPN provider. No logging, no filtering.
+  /// Available worldwide with strong privacy guarantees.
+  ///
+  /// [Mullvad DNS documentation](https://mullvad.net/en/help/dns-over-https-and-dns-over-tls)
+  factory DnsOverHttpsWire.mullvad({Duration? timeout}) {
+    return DnsOverHttpsWire(
+      'https://dns.mullvad.net/dns-query',
+      timeout: timeout,
+    );
+  }
+
+  /// Mullvad DNS with ad blocking.
+  ///
+  /// Blocks ads and trackers in addition to DNS resolution.
+  /// Uses curated blocklists maintained by Mullvad.
+  ///
+  /// [Mullvad DNS documentation](https://mullvad.net/en/help/dns-over-https-and-dns-over-tls)
+  factory DnsOverHttpsWire.mullvadAdblock({Duration? timeout}) {
+    return DnsOverHttpsWire(
+      'https://adblock.dns.mullvad.net/dns-query',
+      timeout: timeout,
+    );
+  }
+
+  /// Mullvad DNS with extended blocking.
+  ///
+  /// Extended blocking includes ads, trackers, malware, adult content,
+  /// gambling, and social media. Most restrictive Mullvad filter.
+  ///
+  /// [Mullvad DNS documentation](https://mullvad.net/en/help/dns-over-https-and-dns-over-tls)
+  factory DnsOverHttpsWire.mullvadExtended({Duration? timeout}) {
+    return DnsOverHttpsWire(
+      'https://extended.dns.mullvad.net/dns-query',
+      timeout: timeout,
+    );
+  }
+
+  // ========== ControlD Factory Constructors ==========
+
+  /// ControlD Free DNS (p0) - Unfiltered.
+  ///
+  /// No filtering applied. Fast, privacy-respecting DNS resolution.
+  ///
+  /// [ControlD documentation](https://controld.com/free-dns)
+  factory DnsOverHttpsWire.controld({Duration? timeout}) {
+    return DnsOverHttpsWire(
+      'https://freedns.controld.com/p0',
+      timeout: timeout,
+    );
+  }
+
+  /// ControlD Malware Blocking DNS (p1).
+  ///
+  /// Blocks malware, phishing, and other malicious domains.
+  ///
+  /// [ControlD documentation](https://controld.com/free-dns)
+  factory DnsOverHttpsWire.controldMalware({Duration? timeout}) {
+    return DnsOverHttpsWire(
+      'https://freedns.controld.com/p1',
+      timeout: timeout,
+    );
+  }
+
+  /// ControlD Malware + Ads Blocking DNS (p2).
+  ///
+  /// Blocks malware, phishing, ads, and trackers.
+  /// Most comprehensive ControlD free filter.
+  ///
+  /// [ControlD documentation](https://controld.com/free-dns)
+  factory DnsOverHttpsWire.controldMalwareAds({Duration? timeout}) {
+    return DnsOverHttpsWire(
+      'https://freedns.controld.com/p2',
+      timeout: timeout,
+    );
+  }
+
   // ========== DnsClient Interface Implementation ==========
 
   @override

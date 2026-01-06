@@ -111,6 +111,18 @@ class DnsOverHttps extends DnsClient {
     return DnsOverHttps(url, timeout: timeout);
   }
 
+  // ========== DNS.SB Factory Constructor ==========
+
+  /// DNS.SB DNS-over-HTTPS resolver.
+  ///
+  /// Privacy-focused DNS service with no logging policy.
+  /// Operates servers in multiple countries for low latency.
+  ///
+  /// [DNS.SB documentation](https://dns.sb/)
+  factory DnsOverHttps.dnsSb({Duration? timeout}) {
+    return DnsOverHttps('https://doh.dns.sb/dns-query', timeout: timeout);
+  }
+
   @override
   Future<List<InternetAddress>> lookup(String hostname) {
     return lookupHttps(hostname).then((record) {

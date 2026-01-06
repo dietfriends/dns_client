@@ -18,7 +18,8 @@ class DnsLookupException implements Exception {
   DnsLookupException(this.message, {required this.hostname, this.status});
 
   @override
-  String toString() => 'DnsLookupException: $message (hostname: $hostname, status: $status)';
+  String toString() =>
+      'DnsLookupException: $message (hostname: $hostname, status: $status)';
 }
 
 /// Exception thrown when the DNS-over-HTTPS request fails.
@@ -39,15 +40,16 @@ class DnsHttpException implements Exception {
 abstract class DnsRecord with _$DnsRecord {
   const DnsRecord._(); // Added constructor
   const factory DnsRecord(
-      @JsonKey(name: 'Status') int status,
-      bool TC,
-      bool RD,
-      bool RA,
-      bool AD,
-      bool CD,
-      @JsonKey(name: 'edns_client_subnet') String? ednsClientSubnet,
-      @JsonKey(name: 'Answer') List<Answer>? answer,
-      @JsonKey(name: 'Comment') String? comment) = _DnsRecord;
+    @JsonKey(name: 'Status') int status,
+    bool TC,
+    bool RD,
+    bool RA,
+    bool AD,
+    bool CD,
+    @JsonKey(name: 'edns_client_subnet') String? ednsClientSubnet,
+    @JsonKey(name: 'Answer') List<Answer>? answer,
+    @JsonKey(name: 'Comment') String? comment,
+  ) = _DnsRecord;
 
   factory DnsRecord.fromJson(Map<String, dynamic> json) =>
       _$DnsRecordFromJson(json);

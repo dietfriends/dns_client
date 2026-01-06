@@ -126,6 +126,180 @@ void main() {
       });
     });
 
+    group('CleanBrowsing Family', () {
+      late DnsOverHttpsWire client;
+
+      setUp(() {
+        client = DnsOverHttpsWire.cleanBrowsingFamily();
+      });
+
+      tearDown(() {
+        client.close();
+      });
+
+      test('lookup returns IP addresses', () async {
+        final addresses = await client.lookup('google.com');
+        expect(addresses, isNotEmpty);
+        expect(addresses.first.address, isNotEmpty);
+      });
+
+      test('lookupWire returns DnsRecord', () async {
+        final record = await client.lookupWire('example.com', RRType.A);
+        expect(record.isSuccess, isTrue);
+        expect(record.answer, isNotNull);
+      });
+    });
+
+    group('CleanBrowsing Adult', () {
+      late DnsOverHttpsWire client;
+
+      setUp(() {
+        client = DnsOverHttpsWire.cleanBrowsingAdult();
+      });
+
+      tearDown(() {
+        client.close();
+      });
+
+      test('lookup returns IP addresses', () async {
+        final addresses = await client.lookup('google.com');
+        expect(addresses, isNotEmpty);
+      });
+    });
+
+    group('CleanBrowsing Security', () {
+      late DnsOverHttpsWire client;
+
+      setUp(() {
+        client = DnsOverHttpsWire.cleanBrowsingSecurity();
+      });
+
+      tearDown(() {
+        client.close();
+      });
+
+      test('lookup returns IP addresses', () async {
+        final addresses = await client.lookup('google.com');
+        expect(addresses, isNotEmpty);
+      });
+    });
+
+    group('Mullvad', () {
+      late DnsOverHttpsWire client;
+
+      setUp(() {
+        client = DnsOverHttpsWire.mullvad();
+      });
+
+      tearDown(() {
+        client.close();
+      });
+
+      test('lookup returns IP addresses', () async {
+        final addresses = await client.lookup('google.com');
+        expect(addresses, isNotEmpty);
+        expect(addresses.first.address, isNotEmpty);
+      });
+
+      test('lookupWire returns DnsRecord', () async {
+        final record = await client.lookupWire('example.com', RRType.A);
+        expect(record.isSuccess, isTrue);
+        expect(record.answer, isNotNull);
+      });
+    });
+
+    group('Mullvad Adblock', () {
+      late DnsOverHttpsWire client;
+
+      setUp(() {
+        client = DnsOverHttpsWire.mullvadAdblock();
+      });
+
+      tearDown(() {
+        client.close();
+      });
+
+      test('lookup returns IP addresses', () async {
+        final addresses = await client.lookup('google.com');
+        expect(addresses, isNotEmpty);
+      });
+    });
+
+    group('Mullvad Extended', () {
+      late DnsOverHttpsWire client;
+
+      setUp(() {
+        client = DnsOverHttpsWire.mullvadExtended();
+      });
+
+      tearDown(() {
+        client.close();
+      });
+
+      test('lookup returns IP addresses', () async {
+        final addresses = await client.lookup('google.com');
+        expect(addresses, isNotEmpty);
+      });
+    });
+
+    group('ControlD', () {
+      late DnsOverHttpsWire client;
+
+      setUp(() {
+        client = DnsOverHttpsWire.controld();
+      });
+
+      tearDown(() {
+        client.close();
+      });
+
+      test('lookup returns IP addresses', () async {
+        final addresses = await client.lookup('google.com');
+        expect(addresses, isNotEmpty);
+        expect(addresses.first.address, isNotEmpty);
+      });
+
+      test('lookupWire returns DnsRecord', () async {
+        final record = await client.lookupWire('example.com', RRType.A);
+        expect(record.isSuccess, isTrue);
+        expect(record.answer, isNotNull);
+      });
+    });
+
+    group('ControlD Malware', () {
+      late DnsOverHttpsWire client;
+
+      setUp(() {
+        client = DnsOverHttpsWire.controldMalware();
+      });
+
+      tearDown(() {
+        client.close();
+      });
+
+      test('lookup returns IP addresses', () async {
+        final addresses = await client.lookup('google.com');
+        expect(addresses, isNotEmpty);
+      });
+    });
+
+    group('ControlD Malware+Ads', () {
+      late DnsOverHttpsWire client;
+
+      setUp(() {
+        client = DnsOverHttpsWire.controldMalwareAds();
+      });
+
+      tearDown(() {
+        client.close();
+      });
+
+      test('lookup returns IP addresses', () async {
+        final addresses = await client.lookup('google.com');
+        expect(addresses, isNotEmpty);
+      });
+    });
+
     group('client lifecycle', () {
       test('close prevents further lookups', () async {
         final client = DnsOverHttpsWire.quad9();
