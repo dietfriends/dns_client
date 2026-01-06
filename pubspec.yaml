@@ -1,5 +1,5 @@
 name: dns_client
-description: Dart implementation of DNS-over-HTTPS.
+description: Dart DNS-over-HTTPS (DoH) client supporting Google, Cloudflare, AdGuard, and Quad9 providers.
 version: 1.3.0
 homepage: https://github.com/dietfriends/dns_client
 
