@@ -190,11 +190,16 @@ class DnsOverHttpsWire extends DnsClient {
         DataStreamMessage(queryBytes, endStream: true),
       );
 
-      // Read response
+      // Read response with timeout to prevent hung requests
       int? statusCode;
       final responseData = BytesBuilder();
 
-      await for (final message in stream.incomingMessages) {
+      final messages =
+          timeout != null
+              ? stream.incomingMessages.timeout(timeout!)
+              : stream.incomingMessages;
+
+      await for (final message in messages) {
         if (message is HeadersStreamMessage) {
           for (final header in message.headers) {
             final name = String.fromCharCodes(header.name);
