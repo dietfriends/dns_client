@@ -6,6 +6,13 @@
 - Replace deprecated pedantic with lints package
 - Update all dependencies for Dart 3 compatibility
 
+## [1.3.1](https://github.com/amondnet/dns_client/compare/v1.3.0...v1.3.1) (2026-01-06)
+
+
+### Bug Fixes
+
+* improve pub.dev pana score to 160/160 ([d37929e](https://github.com/amondnet/dns_client/commit/d37929e6a4b9e2eeba20f3f0ea04eabfb8c9b183))
+
 ## [1.3.0](https://github.com/amondnet/dns_client/compare/v1.2.0...v1.3.0) (2026-01-06)
 
 
