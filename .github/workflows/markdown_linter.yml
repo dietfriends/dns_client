@@ -23,3 +23,4 @@ jobs:
             *.md
             **/*.md
             !CHANGELOG.md
+            !node_modules/**
