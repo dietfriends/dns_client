@@ -10,7 +10,8 @@ Dart로 구현한 DNS-over-HTTPS (DoH) 라이브러리입니다.
 
 ## 주요 기능
 
-- **다양한 DNS 제공자** - Google DNS, Cloudflare DNS 또는 사용자 정의 DoH 엔드포인트 지원
+- **다양한 DNS 제공자** - Google DNS, Cloudflare DNS, AdGuard DNS, Quad9 또는 사용자 정의 DoH 엔드포인트 지원
+- **와이어 포맷 지원** - Quad9용 HTTP/2 기반 RFC 1035/8484 호환 DNS 와이어 포맷
 - **36개 DNS 레코드 타입** - A, AAAA, MX, TXT, SRV, CAA, HTTPS, SVCB, DNSKEY, DS 등
 - **개인정보 보호** - 권한 있는 네임서버로부터 클라이언트 IP 숨김
 - **에러 처리** - DNS 및 HTTP 오류에 대한 상세한 예외 처리
@@ -60,6 +61,26 @@ dns.close();
 
 // Cloudflare DNS 사용
 final dns = DnsOverHttps.cloudflare();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// AdGuard DNS 사용 (광고/추적기 차단)
+final dns = DnsOverHttps.adguard();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Quad9 DNS 사용 (악성코드 차단 + DNSSEC)
+final dns = DnsOverHttpsWire.quad9();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Quad9 DNS 사용 ECS 지원 (지리적 위치 힌트)
+final dns = DnsOverHttpsWire.quad9Ecs();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Quad9 DNS 사용 (필터링 없음)
+final dns = DnsOverHttpsWire.quad9Unsecured();
 final addresses = await dns.lookup('example.com');
 dns.close();
 ```
@@ -189,11 +210,14 @@ dns.close();
 
 **생성자:**
 
-| 생성자                                         | 설명                       |
-| ---------------------------------------------- | -------------------------- |
-| `DnsOverHttps(url, {timeout, maximalPrivacy})` | 사용자 정의 DoH 엔드포인트 |
-| `DnsOverHttps.google({timeout})`               | Google DNS (dns.google)    |
-| `DnsOverHttps.cloudflare({timeout})`           | Cloudflare DNS (1.1.1.1)   |
+| 생성자                                         | 설명                           |
+| ---------------------------------------------- | ------------------------------ |
+| `DnsOverHttps(url, {timeout, maximalPrivacy})` | 사용자 정의 DoH 엔드포인트     |
+| `DnsOverHttps.google({timeout})`               | Google DNS (dns.google)        |
+| `DnsOverHttps.cloudflare({timeout})`           | Cloudflare DNS (1.1.1.1)       |
+| `DnsOverHttps.adguard({timeout})`              | AdGuard DNS (광고/추적기 차단) |
+| `DnsOverHttps.adguardNonFiltering({timeout})`  | AdGuard DNS (필터링 없음)      |
+| `DnsOverHttps.adguardFamily({timeout})`        | AdGuard DNS (가족 보호)        |
 
 **메서드:**
 
@@ -203,6 +227,28 @@ dns.close();
 | `lookupDataByRRType(hostname, rrType)`  | `Future<List<String>>`          | 특정 레코드 타입 조회     |
 | `lookupHttpsByRRType(hostname, rrType)` | `Future<DnsRecord>`             | 전체 DNS 응답 가져오기    |
 | `close({force})`                        | `void`                          | HTTP 클라이언트 종료      |
+
+### DnsOverHttpsWire
+
+HTTP/2 기반 와이어 포맷 DoH 클라이언트 (RFC 1035/8484). Quad9에 필요합니다.
+
+**생성자:**
+
+| 생성자                                       | 설명                               |
+| -------------------------------------------- | ---------------------------------- |
+| `DnsOverHttpsWire(url, {timeout})`           | 사용자 정의 와이어 포맷 DoH        |
+| `DnsOverHttpsWire.quad9({timeout})`          | Quad9 DNS (악성코드 차단 + DNSSEC) |
+| `DnsOverHttpsWire.quad9Ecs({timeout})`       | Quad9 DNS EDNS Client Subnet       |
+| `DnsOverHttpsWire.quad9Unsecured({timeout})` | Quad9 DNS (필터링 없음)            |
+
+**메서드:**
+
+| 메서드                                 | 반환 타입                       | 설명                      |
+| -------------------------------------- | ------------------------------- | ------------------------- |
+| `lookup(hostname)`                     | `Future<List<InternetAddress>>` | 호스트명을 IP 주소로 해석 |
+| `lookupDataByRRType(hostname, rrType)` | `Future<List<String>>`          | 특정 레코드 타입 조회     |
+| `lookupWire(hostname, rrType)`         | `Future<DnsRecord>`             | 전체 DNS 응답 가져오기    |
+| `close({force})`                       | `Future<void>`                  | HTTP/2 클라이언트 종료    |
 
 ### 지원하는 레코드 타입 (RRType)
 
@@ -287,6 +333,11 @@ final tlsaRecords = await dns.lookupDataByRRType('example.com', tlsaType);
 
 - `statusCode` - HTTP 상태 코드
 - `message` - 오류 설명
+
+**DnsWireFormatException** - 와이어 포맷 파싱 실패 시 발생:
+
+- `message` - 오류 설명
+- `offset` - 오류가 발생한 바이트 오프셋
 
 ## 요구사항
 

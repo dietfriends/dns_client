@@ -10,7 +10,8 @@ Dart implementation of DNS-over-HTTPS (DoH).
 
 ## Features
 
-- **Multiple DNS Providers** - Google DNS, Cloudflare DNS, AdGuard DNS, or custom DoH endpoints
+- **Multiple DNS Providers** - Google DNS, Cloudflare DNS, AdGuard DNS, Quad9, or custom DoH endpoints
+- **Wire Format Support** - RFC 1035/8484 compliant DNS wire format with HTTP/2 for Quad9
 - **36 DNS Record Types** - A, AAAA, MX, TXT, SRV, CAA, HTTPS, SVCB, DNSKEY, DS, and more
 - **Privacy Protection** - Hide client IP from authoritative nameservers
 - **Error Handling** - Detailed exceptions for DNS and HTTP failures
@@ -75,6 +76,21 @@ dns.close();
 
 // Using AdGuard DNS (family protection)
 final dns = DnsOverHttps.adguardFamily();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Using Quad9 DNS (malware blocking + DNSSEC)
+final dns = DnsOverHttpsWire.quad9();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Using Quad9 DNS with ECS (geolocation hints)
+final dns = DnsOverHttpsWire.quad9Ecs();
+final addresses = await dns.lookup('example.com');
+dns.close();
+
+// Using Quad9 DNS (no filtering)
+final dns = DnsOverHttpsWire.quad9Unsecured();
 final addresses = await dns.lookup('example.com');
 dns.close();
 ```
@@ -222,6 +238,28 @@ dns.close();
 | `lookupHttpsByRRType(hostname, rrType)` | `Future<DnsRecord>`             | Get full DNS response            |
 | `close({force})`                        | `void`                          | Shutdown HTTP client             |
 
+### DnsOverHttpsWire
+
+Wire format DoH client using HTTP/2 (RFC 1035/8484). Required for Quad9.
+
+**Constructors:**
+
+| Constructor                                  | Description                           |
+| -------------------------------------------- | ------------------------------------- |
+| `DnsOverHttpsWire(url, {timeout})`           | Custom wire format DoH endpoint       |
+| `DnsOverHttpsWire.quad9({timeout})`          | Quad9 DNS (malware blocking + DNSSEC) |
+| `DnsOverHttpsWire.quad9Ecs({timeout})`       | Quad9 DNS with EDNS Client Subnet     |
+| `DnsOverHttpsWire.quad9Unsecured({timeout})` | Quad9 DNS (no filtering)              |
+
+**Methods:**
+
+| Method                                 | Returns                         | Description                      |
+| -------------------------------------- | ------------------------------- | -------------------------------- |
+| `lookup(hostname)`                     | `Future<List<InternetAddress>>` | Resolve hostname to IP addresses |
+| `lookupDataByRRType(hostname, rrType)` | `Future<List<String>>`          | Query specific record type       |
+| `lookupWire(hostname, rrType)`         | `Future<DnsRecord>`             | Get full DNS response            |
+| `close({force})`                       | `Future<void>`                  | Shutdown HTTP/2 client           |
+
 ### Supported Record Types (RRType)
 
 | Type       | Constant            | Value | Description                |
@@ -305,6 +343,11 @@ final tlsaRecords = await dns.lookupDataByRRType('example.com', tlsaType);
 
 - `statusCode` - HTTP status code
 - `message` - Error description
+
+**DnsWireFormatException** - Thrown when wire format parsing fails:
+
+- `message` - Error description
+- `offset` - Byte offset where error occurred
 
 ## Requirements
 
