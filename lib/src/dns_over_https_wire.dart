@@ -135,6 +135,8 @@ class DnsOverHttpsWire extends DnsClient {
 
   // ========== CleanBrowsing Factory Constructors ==========
 
+  static const _cleanBrowsingBaseUrl = 'https://doh.cleanbrowsing.org/doh/';
+
   /// CleanBrowsing Family Filter DNS-over-HTTPS.
   ///
   /// Blocks access to adult content, as well as malicious and phishing domains.
@@ -144,7 +146,7 @@ class DnsOverHttpsWire extends DnsClient {
   /// [CleanBrowsing documentation](https://cleanbrowsing.org/filters/)
   factory DnsOverHttpsWire.cleanBrowsingFamily({Duration? timeout}) {
     return DnsOverHttpsWire(
-      'https://doh.cleanbrowsing.org/doh/family-filter/',
+      '${_cleanBrowsingBaseUrl}family-filter/',
       timeout: timeout,
     );
   }
@@ -157,7 +159,7 @@ class DnsOverHttpsWire extends DnsClient {
   /// [CleanBrowsing documentation](https://cleanbrowsing.org/filters/)
   factory DnsOverHttpsWire.cleanBrowsingAdult({Duration? timeout}) {
     return DnsOverHttpsWire(
-      'https://doh.cleanbrowsing.org/doh/adult-filter/',
+      '${_cleanBrowsingBaseUrl}adult-filter/',
       timeout: timeout,
     );
   }
@@ -170,7 +172,7 @@ class DnsOverHttpsWire extends DnsClient {
   /// [CleanBrowsing documentation](https://cleanbrowsing.org/filters/)
   factory DnsOverHttpsWire.cleanBrowsingSecurity({Duration? timeout}) {
     return DnsOverHttpsWire(
-      'https://doh.cleanbrowsing.org/doh/security-filter/',
+      '${_cleanBrowsingBaseUrl}security-filter/',
       timeout: timeout,
     );
   }
@@ -218,16 +220,15 @@ class DnsOverHttpsWire extends DnsClient {
 
   // ========== ControlD Factory Constructors ==========
 
+  static const _controldBaseUrl = 'https://freedns.controld.com/';
+
   /// ControlD Free DNS (p0) - Unfiltered.
   ///
   /// No filtering applied. Fast, privacy-respecting DNS resolution.
   ///
   /// [ControlD documentation](https://controld.com/free-dns)
   factory DnsOverHttpsWire.controld({Duration? timeout}) {
-    return DnsOverHttpsWire(
-      'https://freedns.controld.com/p0',
-      timeout: timeout,
-    );
+    return DnsOverHttpsWire('${_controldBaseUrl}p0', timeout: timeout);
   }
 
   /// ControlD Malware Blocking DNS (p1).
@@ -236,10 +237,7 @@ class DnsOverHttpsWire extends DnsClient {
   ///
   /// [ControlD documentation](https://controld.com/free-dns)
   factory DnsOverHttpsWire.controldMalware({Duration? timeout}) {
-    return DnsOverHttpsWire(
-      'https://freedns.controld.com/p1',
-      timeout: timeout,
-    );
+    return DnsOverHttpsWire('${_controldBaseUrl}p1', timeout: timeout);
   }
 
   /// ControlD Malware + Ads Blocking DNS (p2).
@@ -249,10 +247,7 @@ class DnsOverHttpsWire extends DnsClient {
   ///
   /// [ControlD documentation](https://controld.com/free-dns)
   factory DnsOverHttpsWire.controldMalwareAds({Duration? timeout}) {
-    return DnsOverHttpsWire(
-      'https://freedns.controld.com/p2',
-      timeout: timeout,
-    );
+    return DnsOverHttpsWire('${_controldBaseUrl}p2', timeout: timeout);
   }
 
   // ========== DnsClient Interface Implementation ==========
