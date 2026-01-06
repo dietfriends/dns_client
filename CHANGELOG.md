@@ -6,6 +6,13 @@
 - Replace deprecated pedantic with lints package
 - Update all dependencies for Dart 3 compatibility
 
+## [1.2.0](https://github.com/amondnet/dns_client/compare/v1.1.0...v1.2.0) (2026-01-06)
+
+
+### Features
+
+* add DNS wire format support with Quad9 provider ([#24](https://github.com/amondnet/dns_client/issues/24)) ([7a8ab8c](https://github.com/amondnet/dns_client/commit/7a8ab8c23b46617d2bd7180a8dc6c2d54be37cff))
+
 ## [1.1.0](https://github.com/amondnet/dns_client/compare/v1.0.0...v1.1.0) (2026-01-05)
 
 ### Features
