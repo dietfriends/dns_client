@@ -73,4 +73,36 @@ void main() {
       expect(client.lookup('google.com'), throwsA(isA<StateError>()));
     });
   });
+
+  group('HttpDnsClient NextDNS', () {
+    test('lookup( google.com )', () async {
+      final client = DnsOverHttps.nextdns();
+      final address = await client.lookup('google.com');
+      expect(address, isNotNull);
+      expect(address.isNotEmpty, isTrue);
+      client.close();
+    });
+
+    test('anycast lookup( google.com )', () async {
+      final client = DnsOverHttps.nextdnsAnycast();
+      final address = await client.lookup('google.com');
+      expect(address, isNotNull);
+      expect(address.isNotEmpty, isTrue);
+      client.close();
+    });
+
+    test('cname test', () async {
+      final client = DnsOverHttps.nextdns();
+      final address = await client.lookup('api.google.com');
+      expect(address, isNotNull);
+      expect(address.isNotEmpty, isTrue);
+      client.close();
+    });
+
+    test('close', () async {
+      final client = DnsOverHttps.nextdns();
+      client.close();
+      expect(client.lookup('google.com'), throwsA(isA<StateError>()));
+    });
+  });
 }
